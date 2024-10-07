@@ -12,3 +12,15 @@ Filter Harga: Bandingkan harga kaset game dari berbagai tempat dengan mudah.
 Ulasan Pengguna: Lihat rekomendasi dan ulasan dari sesama gamer sebelum memutuskan membeli.
 
 Jadi, tunggu apa lagi? Jelajahi dunia game PS4 dengan mudah dan cepat bersama GameHunt!
+
+
+
+
+
+Nama Anggota:
+- Oscar Ryanda Putra - 2306217765
+- Aliefa Alsyafiandra Setiawati Mahdi - 2306221056	
+- Priscilla Natanael Surjanto - 2306152153	
+- Vincent Davis Leonard Tjoeng - 2306275014	
+- Utandra Nur Ahmad Jais - 2306152443	
+- Rahma Dwi Maghfira - 2306245794	
