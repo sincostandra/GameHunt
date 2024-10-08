@@ -52,6 +52,7 @@ Fitur yang bisa diakses :
   * Mengelola informasi game yang dijual.
   * Mengelola informasi toko 
   * Menghapus ulasan atau komentar yang tidak sesuai dengan kebijakan aplikasi.
+  * Mengelola order
 
 ### 2. Registered User
 
