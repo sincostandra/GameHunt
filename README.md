@@ -43,7 +43,7 @@ Dapat dilihat di link <a href ="https://docs.google.com/spreadsheets/d/1K3VhjmiJ
 
 Terdapat beberapa peran atau role pengguna yang dapat diakses dengan fitur-fitur yang berbeda
 
-1. Admin
+### 1. Admin
 
 Admin adalah pengguna dengan akses penuh untuk mengelola seluruh konten dan pengguna dalam aplikasi. Mereka memiliki wewenang untuk menjaga kualitas data, ulasan, dan informasi yang ada di platform.
 
@@ -53,7 +53,7 @@ Fitur yang bisa diakses :
   * Mengelola informasi toko 
   * Menghapus ulasan atau komentar yang tidak sesuai dengan kebijakan aplikasi.
 
-2. Registered User
+### 2. Registered User
 
 Pengguna terdaftar adalah pengguna yang telah membuat akun di GameHunt dan dapat menikmati semua fitur dasar seperti mencari game, memberikan ulasan, dan membeli game.
 
