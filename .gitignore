@@ -20,7 +20,7 @@ media
 # AWS User-specific
 .idea/**/aws.xml
 
-# Generated files
+# Generated file
 .idea/**/contentModel.xml
 .DS_Store
 
