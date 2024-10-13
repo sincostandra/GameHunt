@@ -1,0 +1,42 @@
+
+
+{% if not game_entries %}
+<p>No games available in the database.</p>
+{% else %}
+<table>
+  <tr>
+    <th>Game Name</th>
+    <th>Year</th>
+    <th>Description</th>
+    <th>Developer</th>
+    <th>Genre</th>
+    <th>Ratings</th>
+    <th>Harga</th>
+    <th>Toko 1</th>
+    <th>Alamat 1</th>
+    <th>Toko 2</th>
+    <th>Alamat 2</th>
+    <th>Toko 3</th>
+    <th>Alamat 3</th>
+  </tr>
+
+  {% comment %} Displaying game entries below {% endcomment %}
+  {% for game in game_entries %}
+  <tr>
+    <td>{{ game.name }}</td>
+    <td>{{ game.year }}</td>
+    <td>{{ game.description }}</td>
+    <td>{{ game.developer }}</td>
+    <td>{{ game.genre }}</td>
+    <td>{{ game.ratings }}</td>
+    <td>{{ game.harga }}</td>
+    <td>{{ game.toko1 }}</td>
+    <td>{{ game.alamat1 }}</td>
+    <td>{{ game.toko2 }}</td>
+    <td>{{ game.alamat2 }}</td>
+    <td>{{ game.toko3 }}</td>
+    <td>{{ game.alamat3 }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
