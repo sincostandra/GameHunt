@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from search.models import Game
 from search.forms import GameForm
+from django.http import HttpResponse
+from django.core import serializers
 
 def show_search(request):
     game_entries = Game.objects.all()
@@ -22,3 +24,7 @@ def create_game_entry(request):
 
     context = {'form': form}
     return render(request, "create_game_entry.html", context)
+
+def show_json(request):
+    data = Game.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
