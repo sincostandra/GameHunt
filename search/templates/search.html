@@ -1,30 +1,139 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block content %}
+<style>
+/* CSS for the circular indicator */
+.circle-bg {
+    stroke: #e5e7eb; /* Light gray */
+    stroke-width: 4;
+  }
 
-<h1>Game Hunt</h1>
-<div class="flex justify-center mt-4">
-  <div class="max-w-3xl w-full">
-    <input 
-      type="text" 
-      id="searchInput" 
-      placeholder="Search games..." 
-      class="w-full border border-gray-300 rounded-md p-2 focus:border-indigo-700 focus:outline-none" 
-      onkeyup="filterTable()"
-    >
-  </div>
+  .circle-progress {
+    stroke: #ef4444; /* Red */
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s;
+  }
+
+  .circle-wrapper {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    padding: 5px;
+  }
+
+  .circle-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* Rotate only the SVG */
+  }
+
+  .circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ef4444; /* Red */
+  }
+
+  /* Truncate long descriptions with ellipsis */
+  .line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Link hover effect */
+  .game-title-link:hover {
+    color: #ef4444; /* Red */
+  }
+
+
+  .styled-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ef4444; /* Red text */
+    border: 2px solid #ef4444; /* Red border */
+    border-radius: 0.375rem; /* Rounded corners */
+    background-color: transparent; /* Transparent background */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .styled-button:hover {
+    background-color: #ef4444; /* Red background on hover */
+    color: white; /* White text on hover */
+  }
+
+  .edit-button {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ef4444; /* Red text */
+    background-color: white; /* White background */
+    border: 2px solid #ef4444; /* Red border */
+    border-radius: 0.375rem; /* Rounded corners */
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+
+  .edit-button:hover {
+    background-color: #ef4444; /* Red background on hover */
+    color: white; /* White text on hover */
+  }
+
+  /* Delete Button Styling */
+  .delete-button {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white; /* White text */
+    background-color: #ef4444; /* Red background */
+    border: 2px solid #ef4444; /* Red border */
+    border-radius: 0.375rem; /* Rounded corners */
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+
+  .delete-button:hover {
+    background-color: #dc2626; /* Darker red on hover */
+  }
+</style>
+
+
+
+
+<!-- Title -->
+<h1 class="text-2xl font-bold text-center mt-4">Game Hunt</h1>
+
+<!-- Search Bar -->
+<div class="max-w-3xl mx-auto mt-4">
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search games..." 
+    class="w-full border border-gray-300 rounded-md p-2 focus:border-indigo-700 focus:outline-none" 
+    onkeyup="filterTable()"
+  >
 </div>
-<a href="{% url 'search:create_game_entry' %}">
-  <button class="styled-button">Add New Game</button>
-</a>
 
-<button 
-  data-modal-target="crudModal" 
-  data-modal-toggle="crudModal" 
-  onclick="showModal();" 
-  class="styled-button"
->
-  Add New Game Entry by AJAX
-</button>
+<!-- Buttons Aligned to the Right -->
+<div class="flex justify-end max-w-3xl mx-auto mt-2 space-x-2">
+  <button 
+    data-modal-target="crudModal" 
+    data-modal-toggle="crudModal" 
+    onclick="showModal();" 
+    class="styled-button"
+  >
+    Add New Game Entry
+  </button>
+</div>
+
 
 <div id = "game_entry_cards"></div>
 
@@ -150,11 +259,13 @@
     <!-- Modal Footer -->
     <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
       <button type="button" id="cancelButton" 
-              class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
-        Cancel
+      class="border-2 border-gray-500 text-gray-500 font-bold py-2 px-4 rounded-lg 
+             transition duration-300 ease-in-out hover:bg-gray-500 hover:text-white">
+       Cancel
       </button>
       <button type="submit" id="submitGameEntry" form="gameEntryForm" 
-              class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg">
+      class="border-2 border-red-600 text-red-600 font-bold py-2 px-4 rounded-lg 
+             transition duration-300 ease-in-out hover:bg-red-600 hover:text-white">
         Save
       </button>
     </div>
@@ -237,14 +348,21 @@
       const ratingOffset = 113 - (item.fields.ratings / 5) * 113; // Calculate stroke-dashoffset based on rating
 
       htmlString += `
-      <div id ="gameTableBody">
+      <div id="gameTableBody">
         <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 mb-4">
           <div class="flex-1 space-y-2">
             <div class="flex justify-between items-center">
-              <a href="#" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
+              <a href="/search/edit-game/${item.pk}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
                 ${item.fields.name}
               </a>
-              <button class="text-xs text-blue-500 hover:underline">Edit</button>
+              <div class="flex space-x-2">
+                <a href="/search/edit-game/${item.pk}">
+                  <button class="edit-button">Edit</button>
+                </a>
+                <a href="/search/delete/${item.pk}">
+                  <button class="delete-button">Delete</button>
+                </a>
+              </div>
             </div>
 
             <p class="text-sm text-gray-600 line-clamp">
@@ -256,7 +374,7 @@
               <span>Genre: ${item.fields.genre}</span>
             </div>
 
-            <p class="text-sm font-semibold text-gray-800">Price: ${item.fields.harga} IDR</p>
+            <p class="text-sm font-semibold text-gray-800">Price: Rp ${item.fields.harga}</p>
           </div>
 
           <div class="w-px bg-gray-300 h-20"></div>
