@@ -1,30 +1,75 @@
 {% extends 'base.html' %} 
 {% block content %}
+<style>
+  /* Limit description to 3 lines with ellipsis */
 
+</style>
 <h1>Game Hunt</h1>
-<div class="flex justify-center mt-4">
-  <div class="max-w-3xl w-full">
-    <input 
-      type="text" 
-      id="searchInput" 
-      placeholder="Search games..." 
-      class="w-full border border-gray-300 rounded-md p-2 focus:border-indigo-700 focus:outline-none" 
-      onkeyup="filterTable()"
-    >
+<!-- TESTING -->
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6 space-y-4">
+  <!-- Title and Year -->
+  <div class="flex justify-between items-center">
+    <h1 class="text-xl font-bold text-gray-900">The Casting of Frank Stone</h1>
+    <span class="text-sm text-gray-500">Year: 2024</span>
+  </div>
+
+  <!-- Description -->
+  <p class="text-gray-700 line-clamp">
+    The Casting of Frank Stone is an incredibly pretty but derivative extension of the Dead by Daylight universe. It offers a visually stunning world but suffers from predictable gameplay and a lack of original content, making it feel like an expansion rather than a standalone title. Nevertheless, fans of the genre may still find some enjoyment in its immersive atmosphere.
+  </p>
+
+  <!-- Developer and Genre -->
+  <div class="flex justify-between items-center">
+    <p class="text-sm text-gray-500">Developer: Michael Leri</p>
+    <p class="text-sm text-gray-500">Genre: Action Horror</p>
+  </div>
+
+  <!-- Price and Ratings Section -->
+  <div class="flex justify-between items-center">
+    <p class="text-lg font-semibold text-gray-800">Price: 500,000 IDR</p>
+    <div class="flex items-center space-x-1">
+      <!-- Full Stars -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+      </svg>
+
+      <!-- Half Star -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" fill="url(#halfStar)" viewBox="0 0 24 24" stroke="currentColor">
+        <defs>
+          <linearGradient id="halfStar">
+            <stop offset="50%" stop-color="currentColor"/>
+            <stop offset="50%" stop-color="transparent"/>
+          </linearGradient>
+        </defs>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+      </svg>
+
+      <!-- Empty Star -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+      </svg>
+    </div>
   </div>
 </div>
-<a href="{% url 'search:create_game_entry' %}">
-  <button class="styled-button">Add New Game</button>
-</a>
 
-<button 
-  data-modal-target="crudModal" 
-  data-modal-toggle="crudModal" 
-  onclick="showModal();" 
-  class="styled-button"
->
-  Add New Game Entry by AJAX
-</button>
+
+<!-- TESTING -->
+<div class="p-4">
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search games..." 
+    class="w-full border border-gray-300 rounded-md p-2 focus:border-indigo-700 focus:outline-none" 
+    onkeyup="filterTable()"
+  >
+</div>
+
 
 <div id = "game_entry_cards"></div>
 
@@ -166,8 +211,12 @@
 
 
 
-
-
+<a href="{% url 'search:create_game_entry' %}">
+  <button>Add New Game</button>
+</a>
+<button data-modal-target="crudModal" data-modal-toggle="crudModal"  onclick="showModal();">
+  Add New Game Entry by AJAX
+</button>
 
 <script>
 // ============================AJAX FORM======================================
@@ -224,89 +273,94 @@
   }
 
   async function refreshGameEntries() {
-  const gameCardsContainer = document.getElementById("game_entry_cards");
-  gameCardsContainer.innerHTML = "";
-  const gameEntries = await getGameEntries();
+    document.getElementById("game_entry_cards").innerHTML = "";
+    document.getElementById("game_entry_cards").className = "";
+    const gameEntries = await getGameEntries();
+    let htmlString = "";
+    let classNameString = "";
+    if (gameEntries.length === 0) {
+      htmlString = '<p>No games available in the database.</p>';
+    }
+    else{
+      htmlString+=`
+        <table>
+        <thead>
+          <tr>
+            <th>Game Name</th>
+            <th>Year</th>
+            <th>Description</th>
+            <th>Developer</th>
+            <th>Genre</th>
+            <th>Ratings</th>
+            <th>Harga</th>
+            <th>Toko 1</th>
+            <th>Alamat 1</th>
+            <th>Toko 2</th>
+            <th>Alamat 2</th>
+            <th>Toko 3</th>
+            <th>Alamat 3</th>
+          </tr>
+        </thead>
+        <tbody id="gameTableBody">
+          `
+      gameEntries.forEach((item) => {
+        htmlString+=`
+          <tr>
+            <td>${item.fields.name}</td>
+            <td>${item.fields.year}</td>
+            <td>${item.fields.description}</td>
+            <td>${item.fields.developer}</td>
+            <td>${item.fields.genre}</td>
+            <td>${item.fields.ratings}</td>
+            <td>${item.fields.harga}</td>
+            <td>${item.fields.toko1}</td>
+            <td>${item.fields.alamat1}</td>
+            <td>${item.fields.toko2}</td>
+            <td>${item.fields.alamat2}</td>
+            <td>${item.fields.toko3}</td>
+            <td>${item.fields.alamat3}</td>
+            <td>
+                <a href="/search/edit-game/${item.pk}">
+                    <button>Edit</button>
+                </a>
+            </td>
+            <td>
+                <a href="/search/delete/${item.pk}">
+                    <button>Delete</button>
+                </a>
+            </td>
 
-  let htmlString = "";
-  
-  if (gameEntries.length === 0) {
-    htmlString = '<p>No games available in the database.</p>';
-  } else {
-    gameEntries.forEach((item) => {
-      const ratingOffset = 113 - (item.fields.ratings / 5) * 113; // Calculate stroke-dashoffset based on rating
-
-      htmlString += `
-      <div id ="gameTableBody">
-        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 mb-4">
-          <div class="flex-1 space-y-2">
-            <div class="flex justify-between items-center">
-              <a href="#" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
-                ${item.fields.name}
-              </a>
-              <button class="text-xs text-blue-500 hover:underline">Edit</button>
-            </div>
-
-            <p class="text-sm text-gray-600 line-clamp">
-              ${item.fields.description}
-            </p>
-
-            <div class="flex justify-between text-xs text-gray-500">
-              <span>Developer: ${item.fields.developer}</span>
-              <span>Genre: ${item.fields.genre}</span>
-            </div>
-
-            <p class="text-sm font-semibold text-gray-800">Price: ${item.fields.harga} IDR</p>
-          </div>
-
-          <div class="w-px bg-gray-300 h-20"></div>
-
-          <div class="circle-wrapper">
-            <svg class="circle-svg" viewBox="0 0 40 40">
-              <circle class="circle-bg" cx="20" cy="20" r="18" fill="none"></circle>
-              <circle
-                class="circle-progress"
-                cx="20"
-                cy="20"
-                r="18"
-                fill="none"
-                stroke-dasharray="113"
-                stroke-dashoffset="${ratingOffset}"
-              ></circle>
-            </svg>
-            <div class="circle-text">${item.fields.ratings}</div>
-          </div>
-        </div>
-      </div>`;
+          </tr>
+        `;
     });
+    htmlString+= `
+    </tbody>
+    </table>`
   }
-
-  gameCardsContainer.innerHTML = htmlString;
+    document.getElementById("game_entry_cards").className = classNameString;
+    document.getElementById("game_entry_cards").innerHTML = htmlString;
 }
-
 refreshGameEntries();
 //=========================SEARCH FILTER==============================
 
 function filterTable() {
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
-  const gameCards = document.querySelectorAll('#gameTableBody');
+  const tableBody = document.getElementById('gameTableBody');
+  const rows = tableBody.getElementsByTagName('tr');
 
-  gameCards.forEach((card) => {
-    const gameName = card.querySelector('.game-title-link').innerText.toLowerCase();
-    const description = card.querySelector('.line-clamp').innerText.toLowerCase();
-    const developer = card.querySelector('.text-xs span:first-child').innerText.toLowerCase();
-    const genre = card.querySelector('.text-xs span:last-child').innerText.toLowerCase();
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].getElementsByTagName('td');
+    let match = false;
 
-    // Check if any content matches the search input
-    const match = 
-      gameName.includes(searchInput) ||
-      description.includes(searchInput) ||
-      developer.includes(searchInput) ||
-      genre.includes(searchInput);
+    for (let j = 0; j < cells.length; j++) {
+      if (cells[j].innerText.toLowerCase().includes(searchInput)) {
+        match = true;
+        break;
+      }
+    }
 
-    // Show or hide the card based on the search result
-    card.style.display = match ? 'block' : 'none';
-  });
+    rows[i].style.display = match ? '' : 'none';
+  }
 }
 
 </script>
