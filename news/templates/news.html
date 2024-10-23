@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Latest Game News from GameHunt</title>
+{% endblock meta %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="flex flex-col min-h-screen">
+    <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+      <h1 class="text-2xl font-bold mt-4">Edit News Entry</h1>
+    
+      <div class="bg-white rounded-lg p-6 form-style">
+        <form method="POST" class="space-y-6">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="flex flex-col">
+              <label for="{{ field.id_for_label }}" class="mb-2 font-semibold">
+                {{ field.label }}
+              </label>
+              <div class="w-full">
+                {{ field }}
+              </div>
+              {% if field.help_text %}
+                <p class="mt-1 text-sm">{{ field.help_text }}</p>
+              {% endif %}
+              {% for error in field.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <div class="flex justify-center mt-6">
+            <button type="submit" class="styled-button">
+              Edit News
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
