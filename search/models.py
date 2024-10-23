@@ -11,7 +11,6 @@ class Game(models.Model):
     ratings = models.FloatField()
     harga = models.IntegerField()
 
-    # Nama dan alamat toko
     toko1 = models.CharField(max_length=255)  # Wajib
     alamat1 = models.CharField(max_length=255)  # Wajib
     toko2 = models.CharField(max_length=255, null=True, blank=True)  # Optional
