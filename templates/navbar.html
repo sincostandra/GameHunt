@@ -1,0 +1,58 @@
+{% load static %} 
+<!-- Navbar HTML Code -->
+<nav class="bg-red-500 text-white fixed w-full top-0 left-0 z-50 p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Left side (Logo and links) -->
+        <div class="flex items-center space-x-4">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-2">
+                <img src="{% static 'image/logo.png' %}" alt="Logo" class="w-8 h-8">
+                <span class="text-xl text-red font-semibold">GameHunt</span>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-gray-200">News</a>
+                <a href="#" class="hover:text-gray-200">Browse Games</a>
+                <a href="#" class="hover:text-gray-200">Wishlist</a>
+            </div>
+        </div>
+
+        <!-- Right side (User Icon and Dropdown) -->
+        <div class="relative">
+            <!-- User Icon -->
+            <button id="userMenuButton" class="flex items-center space-x-2 hover:text-gray-400 focus:outline-none">
+                <img src="{% static 'image/user_icon.png' %}" alt="User Icon" class="w-6 h-6">
+                <span class="text-sm">Username</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white text-black border border-gray-300 py-2">
+                <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100">Edit Profile</a>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // JavaScript to handle the dropdown toggle
+    document.getElementById('userMenuButton').addEventListener('click', function() {
+        var dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('hidden');
+    });
+
+    // Optional: Click outside to close the dropdown
+    window.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('userDropdown');
+        if (!event.target.closest('#userMenuButton')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>

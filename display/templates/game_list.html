@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Game List</title>
+{% endblock meta %}
+
+{% block content %}
+<body>
+    <h1>Game List</h1>
+    <ul>
+        {% for game in games %}
+            <li>
+                {{ game.name }} - {{ game.genre }} ({{ game.year }})
+                <a href="{% url 'game_detail' game.id %}">View Details</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>{{ game.name }} Details</title>
+{% endblock meta %}
+
+{% block content %}
+
+<!-- Container for the entire game details section -->
+<section class="container mx-auto p-6 pt-24">
+    <div class="flex-col bg-white shadow-2xl rounded-3xl p-6 max-w-3xl mx-auto relative">
+        <div class="flex justify-left">
+             <!-- Game Cover Image -->
+            <div class="mt-4 ml-4">
+                <img src="{% static 'image/logo.png' %}" alt="Logo" class="w-40 h-40 rounded-xl shadow-xl bg-red-500">
+            </div>
+        
+            <!-- Content -->
+            <div class="mt-4 ml-6">
+                <!-- Game Title and Info -->
+                <h1 class="mb-2 text-4xl font-bold">{{ game.name }}</h1>
+                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                    <!-- Rating -->
+                    <div class="bg-red-500 text-white px-2 py-1 rounded-md font-semibold">
+                        {{ game.ratings }}
+                    </div>
+                    <!-- Developer and Publisher -->
+                    <a href="#" class="hover:underline text-blue-500">{{ game.developer }}</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline text-blue-500">{{ game.genre }}</a>
+                    <span>•</span>
+                    <!-- Release Date -->
+                    <span>{{ game.year }}</span>
+                </div>
+            </div>
+        </div>
+            
+        <!-- Wishlist Button -->
+        <div class="flex justify-end">
+            <a href="#" class="flex items-center justify-center bg-yellow-300 text-white px-4 py-3 rounded-md font-semibold mr-2 hover:bg-yellow-400 transition duration-300 w-1/4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>See Reviews</span>
+            </a>
+            <a href="#" class="flex items-center justify-center bg-blue-600 text-white px-4 py-3 rounded-md font-semibold hover:bg-blue-700 transition duration-300 w-1/4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.35l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <span>Wishlist</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="flex flex-col justify-center md:flex-row min-h-screen md:space-x-10 space-y-6 md:space-y-0">
+        <!-- Game details section -->
+        <div class="mt-12 md:w-1/2 space-y-6">
+            <!-- Individual details using card_detail.html -->
+            {% include "card_detail.html" with title='Description' value=game.description %}
+            {% include "card_detail.html" with title='Ratings' value=game.ratings %}
+            {% include "card_detail.html" with title='Price' value=game.harga %}
+            {% include "card_detail.html" with title='Developer' value=game.developer %}
+            {% include "card_detail.html" with title='Genre' value=game.genre %}
+            {% include "card_detail.html" with title='Year' value=game.year %}
+        </div>
+    </div>
+
+    <!-- Back to Game List button centered -->
+    <div class="flex justify-center mt-12">
+        <a href="{% url 'game_list' %}" class="text-xl font-semibold underline text-red-400 hover:text-red-500 transition duration-300">
+            Back to Game List
+        </a>
+    </div>
+</section>
+
+{% endblock content %}
