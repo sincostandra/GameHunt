@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render,redirect,reverse, get_object_or_404
 from search.models import Game
 from search.forms import GameForm
 from django.http import HttpResponse,HttpResponseRedirect
@@ -33,6 +33,12 @@ def show_json(request):
     data = Game.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+def show_json_by_id(request, id):
+    # Dapatkan objek Game berdasarkan id atau kembalikan 404 jika tidak ditemukan
+    game = get_object_or_404(Game, pk=id)
+    # Serialisasi objek Game menjadi JSON
+    return HttpResponse(serializers.serialize("json", [game]), content_type="application/json")
+
 
 def edit_game(request, id):
     # Get the game entry based on the id
@@ -48,6 +54,25 @@ def edit_game(request, id):
 
     context = {'form': form}
     return render(request, "edit_game.html", context)
+
+
+@csrf_exempt
+@require_POST
+def edit_game_ajax(request, id):
+    # Mendapatkan game berdasarkan id atau mengembalikan 404 jika tidak ditemukan
+    game = Game.objects.get(pk=id)
+
+    # Menggunakan GameForm dengan instance game untuk memvalidasi data POST
+    form = GameForm(request.POST or None, instance=game)
+    
+    if form.is_valid():
+        form.save()  # Menyimpan perubahan
+        # Mengembalikan response sukses sederhana
+        return HttpResponse("Game updated successfully!", status=200)
+    else:
+        # Mengembalikan pesan error jika form tidak valid
+        return HttpResponse("Error updating game.", status=400)
+
 
 def delete_game(request, id):
     # Get game berdasarkan id
