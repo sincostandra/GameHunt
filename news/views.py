@@ -15,7 +15,7 @@ from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
 
 # Create your views here.
-@login_required
+# @login_required
 def home_news(request):
     return render(request, "home_news.html")
 
@@ -27,6 +27,8 @@ def show_news(request, id):
         'article' : news.article,
         'post_date' : news.post_date,
         'update_date' : news.update_date,
+        'pk' : news.pk,
+        'news_entries' : News.objects.all()
     }
     return render(request, "news.html", context)
 
@@ -37,7 +39,8 @@ def create_news(request):
         news_entry = form.save(commit=False)
         news_entry.user = request.user
         news_entry.save()
-        return redirect('news:news.html')
+        return HttpResponseRedirect(reverse('news:home_news'))
+        # return redirect('news:home_news.html')
 
     context = {'form': form}
     return render(request, "create_news.html", context)
@@ -52,7 +55,7 @@ def edit_news(request, id):
     if form.is_valid() and request.method == "POST":
         # Simpan form dan kembali ke halaman awal
         form.save()
-        return HttpResponseRedirect(reverse('news:news.html'))
+        return HttpResponseRedirect(reverse('news:home_news'))
 
     context = {'form': form}
     return render(request, "edit_news.html", context)
@@ -63,4 +66,20 @@ def delete_news(request, id):
     # Hapus news
     news.delete()
     # Kembali ke halaman awal
-    return HttpResponseRedirect(reverse('news:home_news.html'))
+    return HttpResponseRedirect(reverse('news:home_news'))
+
+def show_xml(request):
+    data = News.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+def show_json(request):
+    data = News.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def show_xml_by_id(request, id):
+    data = News.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+def show_json_by_id(request, id):
+    data = News.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")

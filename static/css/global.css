@@ -26,7 +26,7 @@ margin-bottom: 4px;
 display: block; /* Place label above the input field */
 }
 
-.form-input {
+.form-input form input, form textarea, form select {
 width: 100%; /* Full width for inputs */
 padding: 12px;
 border: 2px solid #4a4a4a; /* Neutral gray border */
@@ -36,7 +36,7 @@ transition: all 0.3s ease-in-out;
 outline: none;
 }
 
-.form-input:focus {
+.form-input:focus form input:focus, form textarea:focus, form select:focus {
 border-color: #1a1a1a; /* Darker gray on focus */
 }
 
@@ -125,6 +125,7 @@ color: white; /* White text on hover */
 }
 
 .edit-button {
+text-align: center;
 padding: 8px 16px;
 font-size: 0.875rem;
 font-weight: 600;
@@ -143,6 +144,7 @@ color: white; /* White text on hover */
 
 /* Delete Button Styling */
 .delete-button {
+text-align: center;
 padding: 8px 16px;
 font-size: 0.875rem;
 font-weight: 600;
