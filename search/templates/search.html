@@ -6,7 +6,11 @@
 <!-- Search Bar -->
 <div class="max-w-3xl mx-auto mt-4 flex items-center">
   <!-- Search Input -->
+  {% if role != 'admin' %}
+  <div class="w-[85%]">
+  {% else %}
   <div class="w-[74%]">
+  {% endif %}
     <input 
       type="text" 
       id="searchInput" 
@@ -16,6 +20,37 @@
     >
   </div>
 
+  <!-- Only show sorting and add button if the user is an admin -->
+  {% if role == 'admin' %}
+    <!-- Filter Button -->
+    <div class="w-[15%] ml-[0.75%]">
+      <select 
+        id="sortOptions" 
+        class="styled-button bg-white border border-gray-500 text-black hover:bg-gray-100 hover:text-gray-500 py-2.2 px-2 rounded-md flex items-center justify-center text-sm transition duration-300"
+        onchange="sortGames()"
+      >
+        <option value="">Sort By</option>
+        <option value="rating">Rating</option>
+        <option value="name">Name</option>
+        <option value="developer">Developer</option>
+        <option value="price">Price</option>
+      </select>
+    </div>
+
+    <!-- Plus Button (Square Shape) -->
+    <div class="w-[10%]">
+      <button 
+        data-modal-target="crudModal" 
+        data-modal-toggle="crudModal" 
+        onclick="showModal('add', '');" 
+        class="styled-button bg-white border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-gray-100 font-bold rounded-md flex items-center justify-center transition duration-300"
+        style="width: 40px; height: 40px;"
+      >
+        <span class="text-xl font-bold" style="line-height: 0; position: relative; top: -3px;">+</span>
+      </button>
+    </div>
+    
+  {%else%}
   <!-- Filter Button -->
   <div class="w-[15%] ml-[0.75%]">
     <select 
@@ -30,21 +65,8 @@
       <option value="price">Price</option>
     </select>
   </div>
-
-  <!-- Plus Button (Square Shape) -->
-  <div class="w-[10%]">
-    <button 
-      data-modal-target="crudModal" 
-      data-modal-toggle="crudModal" 
-      onclick="showModal('add', '');" 
-      class="styled-button bg-white border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-gray-100 font-bold rounded-md flex items-center justify-center transition duration-300"
-      style="width: 40px; height: 40px;"
-    >
-      <span class="text-xl font-bold" style="line-height: 0; position: relative; top: -3px;">+</span>
-    </button>
-  </div>
+  {%endif%}
 </div>
-
 
 
 
@@ -317,12 +339,14 @@
               <a href="/search/edit-game/${item.pk}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
                 ${item.fields.name}
               </a>
+              {% if role == 'admin' %}
               <div class="flex space-x-2">
                   <button class="edit-button" onclick = "showModal('edit','${item.pk}')"">Edit</button>
                 <a href="/search/delete/${item.pk}">
                   <button class="delete-button">Delete</button>
                 </a>
               </div>
+              {% endif %}
             </div>
 
             <p class="text-sm text-gray-600 line-clamp">

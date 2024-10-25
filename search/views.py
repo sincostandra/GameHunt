@@ -9,25 +9,11 @@ from django.views.decorators.http import require_POST
 
 
 def show_search(request):
-    game_entries = Game.objects.all()
     context = {
-        'name': 'Dummy',
-        'last_login' : "Dummy",
-        'game_entries' :game_entries
+        'role':'user'
     }
-
     return render(request, "search.html", context)
 
-
-def create_game_entry(request):
-    form = GameForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return redirect('search:show_search')  # Adjust the redirect based on your URL configuration
-
-    context = {'form': form}
-    return render(request, "create_game_entry.html", context)
 
 def show_json(request):
     data = Game.objects.all()
@@ -39,21 +25,6 @@ def show_json_by_id(request, id):
     # Serialisasi objek Game menjadi JSON
     return HttpResponse(serializers.serialize("json", [game]), content_type="application/json")
 
-
-def edit_game(request, id):
-    # Get the game entry based on the id
-    game = Game.objects.get(pk = id)
-
-    # Set the game entry as the instance for the form
-    form = GameForm(request.POST or None, instance=game)
-
-    if form.is_valid() and request.method == "POST":
-        # Save the form and redirect to the main page
-        form.save()
-        return HttpResponseRedirect(reverse('search:show_search'))
-
-    context = {'form': form}
-    return render(request, "edit_game.html", context)
 
 
 @csrf_exempt
