@@ -1,6 +1,4 @@
 # GameHunt
-## Situs Web
-Proyek ini dapat diakses di:<a href = "utandra-nur-gamehunt.pbp.cs.ui.ac.id/"> sini </a>
 
 ## Nama Anggota
 - Oscar Ryanda Putra - 2306217765
@@ -21,30 +19,21 @@ Jadi, tunggu apa lagi? Jelajahi dunia game PS4 dengan mudah dan cepat bersama Ga
 
 ## Modules
 
-### **Review**
-- Pengguna memiliki kemampuan untuk menambahkan ulasan terkait kaset game dari berbagai toko terdekat. Setiap review bisa memberikan informasi yang bermanfaat bagi pengguna lain.
-- Ulasan dapat diurutkan berdasarkan jumlah bintang, sehingga memudahkan pengguna untuk melihat review dengan rating tertinggi.
-- Admin memiliki kendali penuh atas review, termasuk kemampuan untuk menambah dan menghapus review sesuai kebutuhan.
+### 1. Order
+Modul ini menangani seluruh proses pembelian game oleh pengguna. Setiap kali pengguna membeli game dari toko tertentu, data transaksi akan dicatat dalam model `Order`, yang mencakup informasi seperti game yang dibeli, toko asal, harga, dan status pesanan. Modul ini juga memungkinkan pengguna untuk melihat riwayat pembelian mereka, melakukan pembayaran, dan mendapatkan konfirmasi setelah transaksi berhasil. Dengan ini, pengguna dapat membeli game dari berbagai toko dengan harga yang bervariasi, dan sistem akan mencatat detail transaksi secara akurat.
 
-### **User Authentication**
-- Pengguna dapat membuat akun dan login untuk mengakses fitur-fitur eksklusif GameHunt.
-- Setelah mendaftar, pengguna dapat membuat dan mengedit profil mereka, yang berfungsi sebagai pusat informasi pribadi dan aktivitas pengguna di platform.
+### 2. Review
+Modul ini mengatur proses ulasan terhadap pesanan yang telah diselesaikan. Pengguna dapat memberikan ulasan dan peringkat untuk setiap order setelah pembelian. Model `Review` akan menyimpan data ulasan terkait pesanan tertentu, termasuk komentar pengguna dan rating. Modul ini memungkinkan pengguna lain untuk membaca pengalaman orang lain sebelum memutuskan membeli game yang sama. Dengan adanya ulasan terkait kualitas produk dan layanan toko, calon pembeli dapat memperoleh pandangan yang lebih baik sebelum melakukan pembelian.
 
-### **Pencarian Game**
-- Pengguna dapat dengan mudah mencari kaset game berdasarkan nama game yang diinginkan.
-- Admin memiliki hak untuk menambahkan game baru ke dalam database, memastikan ketersediaan game PS4 terbaru dan klasik langka selalu diperbarui.
 
-### **Display Game**
-- Pengguna dapat melihat daftar toko yang menjual game yang mereka cari, lengkap dengan informasi terkait lokasi dan harga.
-- Game yang diminati pengguna dapat ditambahkan ke wishlist untuk disimpan dan dikelola.
+### 3. Search and Price Sorting Module
+Modul ini memfasilitasi pencarian game dan pengurutan daftar toko berdasarkan harga. Saat pengguna mencari game tertentu, modul ini menampilkan hasil pencarian yang sesuai dan menyediakan fitur untuk mengurutkan daftar toko yang menjual game tersebut berdasarkan harga, dari harga terendah hingga tertinggi atau sebaliknya. Dengan ini, pengguna dapat menemukan toko yang menawarkan harga terbaik secara efisien.
 
-### **Wishlist**
-- Pengguna dapat menambahkan game favorit mereka ke dalam wishlist untuk memudahkan pelacakan dan akses cepat di masa mendatang.
-- Wishlist juga memungkinkan pengguna untuk menghapus game yang tidak lagi mereka inginkan dari daftar.
+### 4. Stock Management
+Modul ini memungkinkan setiap toko untuk mengelola ketersediaan stok game yang mereka jual. Model `Stock` menyimpan informasi mengenai jumlah stok untuk setiap game di toko tertentu. Toko dapat memperbarui stok melalui dashboard mereka, dan pengguna dapat melihat status stok secara *real-time* ketika memilih game dari berbagai toko. 
 
-### **Game News**
-- Admin memiliki kemampuan untuk mengelola berita terbaru mengenai dunia game PS4, termasuk menambahkan, mengedit, dan menghapus berita.
-- Pengguna dapat dengan mudah mengakses berbagai informasi terbaru, promosi, dan diskon menarik di dunia game melalui fitur berita ini.
+### 5. User Authentication Module
+Modul ini memastikan bahwa semua pengguna harus terautentikasi sebelum mengakses fitur-fitur yang memerlukan identitas pengguna. Ini mencakup proses login, logout, dan registrasi, serta pengaturan ulang kata sandi. 
 
 ## Sumber initial dataset kategori utama produk
 
@@ -58,26 +47,20 @@ Terdapat beberapa peran atau role pengguna yang dapat diakses dengan fitur-fitur
 
 Admin adalah pengguna dengan akses penuh untuk mengelola seluruh konten dan pengguna dalam aplikasi. Mereka memiliki wewenang untuk menjaga kualitas data, ulasan, dan informasi yang ada di platform.
 
-Admin memiliki akses penuh ke semua fitur dalam aplikasi, termasuk:
-- Menambah, mengedit, dan menghapus game yang tersedia di database.
-- Menambah, mengedit, dan menghapus review pengguna.
-- Menambah, mengedit, dan menghapus berita terbaru terkait game PS4.
-- Mengelola daftar toko yang menjual game, serta mengedit atau menghapus informasi toko.
-- Memantau ulasan dan aktivitas pengguna di platform, memastikan interaksi berjalan sesuai kebijakan platform.
+Fitur yang bisa diakses :
+
+  * Mengelola informasi game yang dijual.
+  * Mengelola informasi toko 
+  * Menghapus ulasan atau komentar yang tidak sesuai dengan kebijakan aplikasi.
+  * Mengelola order
 
 ### 2. Registered User
 
 Pengguna terdaftar adalah pengguna yang telah membuat akun di GameHunt dan dapat menikmati semua fitur dasar seperti mencari game, memberikan ulasan, dan membeli game.
 
-Pengguna terdaftar memiliki akses untuk:
-- Menambah dan melihat review dari game yang dibeli atau diinginkan.
-- Membuat dan mengedit profil pribadi.
-- Mencari kaset game berdasarkan nama game dan menambah game favorit ke wishlist.
-- Mengakses dan mengelola wishlist mereka.
-- Melihat berita terbaru seputar game PS4, promosi, dan diskon yang tersedia.
+Fitur yang Bisa Diakses:
 
-
-
-
-
-  
+  * Mencari game berdasarkan judul.
+  * Melihat daftar toko yang menjual game tertentu dan membandingkan harga.
+  * Melihat detail game dan ulasan dari pengguna lain.
+  * Memberikan rating dan ulasan setelah membeli game.

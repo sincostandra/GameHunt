@@ -1,21 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ app_name }}</title>
-</head>
-<body>
-    <header>
-        <h1>{{ app_name }}</h1>
-    </header>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container p-4">
+    <!-- Header -->
+    <div class="mb-4 flex justify-between items-center">
+        <h1 class="text-gray-700 text-xl font-medium ml-20">My Wishlist</h1>
+        <div class="flex space-x-2">
+            <button id="delete-selected" class="delete-button" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
+                Delete Game
+            </button>
+            <button id="cancel-delete" class="cancel-button hidden" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
+                Cancel
+            </button>
+        </div>
+    </div>
 
-    <section>
-        <p>{{ app_description }}</p>
-    </section>
+    <!-- Wishlist items -->
+    <div id="wishlist-items" class="flex flex-wrap space-x-4 space-y-4">
+        {% for item in wishlists %}
+        <div class="w-1/4" id="wishlist-item-{{ item.id }}">
+            <div class="flex items-center space-x-2">
+                {% include "cards.html" with title=item.game.name value=item.game.description %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-[#ef4444] text-s font-medium ml-20">No games in your wishlist.</p>
+        {% endfor %}
+    </div>  
 
-    <footer>
-        <a href="#" class="cta-button">Jelajahi Sekarang</a>
-    </footer>
-</body>
-</html>
+    <!-- Delete confirmation section -->
+    <div id="delete-confirmation" class="hidden mt-4 p-4 bg-gray-200 rounded-lg">
+        <h2 class="text-gray-700 text-lg font-medium mb-2">Select Games to Delete</h2>
+        <div class="flex flex-col space-y-4">
+            {% for item in wishlists %}
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" name="delete-items" value="{{ item.id }}" id="delete-item-{{ item.id }}">
+                <label for="delete-item-{{ item.id }}" class="text-sm text-gray-700">{{ item.game.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="flex space-x-2 mt-2">
+            <button id="confirm-delete" class="delete-button" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
+                Confirm Delete
+            </button>
+            <button id="cancel-confirmation" class="cancel-button" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+<script>
+
+document.getElementById('delete-selected').addEventListener('click', function() {
+    document.getElementById('delete-confirmation').classList.remove('hidden'); 
+    document.getElementById('cancel-delete').classList.remove('hidden'); 
+});
+
+
+document.getElementById('confirm-delete').addEventListener('click', function() {
+    const selectedItems = Array.from(document.querySelectorAll('input[name="delete-items"]:checked')).map(checkbox => checkbox.value);
+    
+    if (selectedItems.length === 0) {
+        alert('Please select at least one item to delete.');
+        return;
+    }
+
+    if (confirm('Are you sure you want to delete the selected items from your wishlist?')) {
+        const deletionPromises = selectedItems.map(id => {
+            return fetch(`/wishlist/delete/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            }).then(response => response.json());
+        });
+
+        Promise.all(deletionPromises).then(responses => {
+            responses.forEach((data, index) => {
+                if (data.success) {
+                    document.getElementById(`wishlist-item-${selectedItems[index]}`).remove();
+                } else {
+                    alert('Failed to delete item with id: ' + selectedItems[index]);
+                }
+            });
+            document.getElementById('delete-confirmation').classList.add('hidden');
+            document.getElementById('cancel-delete').classList.add('hidden'); 
+        });
+    }
+});
+
+document.getElementById('cancel-confirmation').addEventListener('click', function() {
+    const deleteConfirmation = document.getElementById('delete-confirmation');
+    deleteConfirmation.classList.add('hidden'); 
+    document.getElementById('cancel-delete').classList.add('hidden'); 
+
+    document.querySelectorAll('input[name="delete-items"]:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+});
+
+document.getElementById('cancel-delete').addEventListener('click', function() {
+    const deleteConfirmation = document.getElementById('delete-confirmation');
+    deleteConfirmation.classList.add('hidden'); 
+    this.classList.add('hidden'); 
+
+    document.querySelectorAll('input[name="delete-items"]:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+});
+</script>
+{% endblock %}
