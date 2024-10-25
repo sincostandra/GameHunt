@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'display'
+    'display',
+    'search'
 ]
 
 MIDDLEWARE = [
@@ -116,10 +117,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
-# This should point to where your static files (including logo.png) are located in development
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Ensure your static folder is in the right location
+    BASE_DIR / "static",
 ]
 
 # Default primary key field type
