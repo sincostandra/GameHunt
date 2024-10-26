@@ -1,65 +1,79 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render,redirect,reverse, get_object_or_404
 from search.models import Game
 from search.forms import GameForm
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
-
-
+@login_required
 def show_search(request):
-    game_entries = Game.objects.all()
-    context = {
-        'name': 'Dummy',
-        'last_login' : "Dummy",
-        'game_entries' :game_entries
-    }
+     # Periksa apakah pengguna adalah superuser
+    if request.user.is_superuser:
+        role = 'admin'
+    else:
+        role = 'user'  # atau bisa diganti sesuai kebutuhan
 
+    context = {
+        'role': role 
+    }
     return render(request, "search.html", context)
 
-
-def create_game_entry(request):
-    form = GameForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return redirect('search:show_search')  # Adjust the redirect based on your URL configuration
-
-    context = {'form': form}
-    return render(request, "create_game_entry.html", context)
-
+@login_required
 def show_json(request):
     data = Game.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+@login_required
+def show_json_by_id(request, id):
+    # Dapatkan objek Game berdasarkan id atau kembalikan 404 jika tidak ditemukan
+    game = get_object_or_404(Game, pk=id)
+    # Serialisasi objek Game menjadi JSON
+    return HttpResponse(serializers.serialize("json", [game]), content_type="application/json")
 
-def edit_game(request, id):
-    # Get the game entry based on the id
-    game = Game.objects.get(pk = id)
 
-    # Set the game entry as the instance for the form
+@login_required
+@csrf_exempt
+@require_POST
+def edit_game_ajax(request, id):
+    # Pastikan hanya superuser yang bisa mengakses
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to perform this action.")
+
+    # Mendapatkan game berdasarkan id atau mengembalikan 404 jika tidak ditemukan
+    game = Game.objects.get(pk=id)
+
+    # Menggunakan GameForm dengan instance game untuk memvalidasi data POST
     form = GameForm(request.POST or None, instance=game)
+    
+    if form.is_valid():
+        form.save()  # Menyimpan perubahan
+        return HttpResponse("Game updated successfully!", status=200)
+    else:
+        return HttpResponse("Error updating game.", status=400)
 
-    if form.is_valid() and request.method == "POST":
-        # Save the form and redirect to the main page
-        form.save()
-        return HttpResponseRedirect(reverse('search:show_search'))
-
-    context = {'form': form}
-    return render(request, "edit_game.html", context)
-
+@login_required
 def delete_game(request, id):
+    # Pastikan hanya superuser yang bisa mengakses
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to perform this action.")
+
     # Get game berdasarkan id
-    game = Game.objects.get(pk = id)
+    game = Game.objects.get(pk=id)
     # Hapus game
     game.delete()
-    # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('search:show_search'))
 
+@login_required
 @csrf_exempt
 @require_POST
 def add_game_entry_ajax(request):
+    # Pastikan hanya superuser yang bisa mengakses
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to perform this action.")
+
     # Extract data from the POST request
     name = request.POST.get("name")
     year = request.POST.get("year")
