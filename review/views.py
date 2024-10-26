@@ -1,24 +1,14 @@
-import json
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render
 from django.contrib import messages
-from django.views.decorators.http import require_POST
 from review.models import Review
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-# from search.models import Game
-from django.contrib.auth.decorators import user_passes_test
-# from books.models import Book
-# from reviews.forms import ReviewForm
-from django.db.models import Count, F, Value, IntegerField
-from django.db.models.functions import Coalesce
-
+from django.db.models import Count
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.core import serializers
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
 from review.forms import ReviewForm
 from search.models import Game
 # Create your views here.
@@ -76,7 +66,6 @@ def create_review_ajax(request, game_id):
 
 # Add a new view to get user's review
 
-
 def get_review_json(request, game_id):
     reviews = Review.objects.filter(game_id=game_id)\
         .annotate(
@@ -90,6 +79,7 @@ def get_review_json(request, game_id):
         'title': review.title,
         'content': review.content,
         'score': review.score,
+        'date': review.date,
         'vote_score': review.vote_score,
         'user_upvoted': request.user in review.upvotes.all() if request.user.is_authenticated else False,
         'user_downvoted': request.user in review.downvotes.all() if request.user.is_authenticated else False
@@ -134,10 +124,6 @@ def edit_review(request, review_id, game_id):
     context = {'form': form}
     return render(request, "edit_review.html", context)
 
-def show_json(request):
-    data = Game.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
-
 @login_required
 @csrf_exempt
 def vote_review(request):
@@ -175,46 +161,3 @@ def vote_review(request):
             return JsonResponse({'status': 'error'}, status=404)
 
     return JsonResponse({'status': 'error'}, status=400)
-
-
-@user_passes_test(lambda u: u.is_staff)
-def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    review.delete()
-    return HttpResponse(b"CREATED", status=201)
-
-### HAPUS KODE DI BAWAH !!!!!!!!
-
-def register(request):
-    form = UserCreationForm()
-
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your account has been successfully created!')
-            return redirect('review:login')
-    context = {'form':form}
-    return render(request, 'register.html', context)
-
-def login_user(request):
-   if request.method == 'POST':
-      form = AuthenticationForm(data=request.POST)
-
-      if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            # return redirect('main:show_main')
-            response = HttpResponseRedirect(reverse("review:ooo"))
-            response.set_cookie('last_login')
-            return response
-      else:
-          messages.error(request, "Invalid username or password. Please try again.")
-
-   else:
-      form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
-
-def ooo(request):
-    return HttpResponse("Hello, world. You're at the ooo view.")

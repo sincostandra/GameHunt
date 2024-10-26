@@ -65,7 +65,7 @@
                         <h3 class="text-xl text-white font-semibold mb-4">Your Review</h3>
                         <div class="bg-slate-300 p-4 rounded-lg">
                             <h3 class="font-bold text-lg">{{ review_user.title }}</h3>
-                            <p class="text-gray-700">{{ username }}</p>
+                            <p class="text-gray-700">{{ username }} - {{ review_user.date }}</p>
                             <p class="mt-2">{{ review_user.content }}</p>
                             <div class="flex items-center justify-between mt-4">
                                 <div class="flex space-x-1">
@@ -233,7 +233,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <h4 class="font-bold">${review.title}</h4>
-                        <p class="text-sm text-gray-600">${review.username}</p>
+                        <p class="text-sm text-gray-600">${review.username} - ${review.date}</p>
                         <div class="text-xs text-gray-500 mt-1">
                             ${review.vote_score > 0 ? `+${review.vote_score}` : review.vote_score} votes
                         </div>
