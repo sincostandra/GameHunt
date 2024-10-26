@@ -31,7 +31,7 @@
 
             <!-- Dropdown Menu -->
             <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white text-black border border-gray-300 py-2">
-                <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100">Edit Profile</a>
+                <a href="{% url 'userprofile:userprofile' %}" class="block px-4 py-2 text-sm hover:bg-gray-100">Edit Profile</a>
                 <form action="{% url 'authentication:logout' %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Logout</button>
