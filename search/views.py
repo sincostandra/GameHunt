@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 
 def show_search(request):
     context = {
-        'role':'user'
+        'role':'admin'
     }
     return render(request, "search.html", context)
 

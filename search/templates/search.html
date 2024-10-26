@@ -326,7 +326,7 @@
   let htmlString = "";
   
   if (gameEntries.length === 0) {
-    htmlString = '<p>No games available in the database.</p>';
+    htmlString = '';
   } else {
     gameEntries.forEach((item) => {
       const ratingOffset = 113 - (item.fields.ratings / 5) * 113; // Calculate stroke-dashoffset based on rating
