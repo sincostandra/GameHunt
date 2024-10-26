@@ -51,7 +51,7 @@ def json_allcomments(request):
 def add_comment_ajax(request, id):
     # Extract the comment body from the POST request
     body = request.POST.get("body")
-    name = "username" # TODO: Change this to the logged-in user
+    name = request.user.username
     game = Game.objects.get(pk=id)
     created = timezone.now()
     formatted_created = created.strftime("%B %d, %Y, %I:%M %p")

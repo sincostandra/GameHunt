@@ -3,6 +3,7 @@
 
 {% block meta %}
 <title>{{ game.name }} Details</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
 {% endblock meta %}
 
 {% block content %}
@@ -134,23 +135,28 @@
   const comments = await getComments();
 
   let htmlString = "";
-  
+  const currentUser = "{{ user.username }}";
   if (comments.length === 0) {
     htmlString = '<p class="text-center">No comments yet.</p>';
   } else {
     comments.forEach((item) => {
+        const name = DOMPurify.sanitize(item.fields.name);
+        const body = DOMPurify.sanitize(item.fields.body);
+        const created = DOMPurify.sanitize(item.fields.created);
       htmlString += `
         <div class="bg-white rounded-xl border border-grey-300 mt-2 overflow-hidden shadow-xl hover:shadow-2xl transition duration-300">
             <div class="p-4 animate-shine">
-                <h5 class="text-sm font-semibold text-blue-500">${item.fields.name}</h5>
-                <p class="text-red">"${item.fields.body}"</p>
-                <p class="text-yellow-600 text-sm">Posted on ${item.fields.created}</p>
+                <h5 class="text-sm font-semibold text-blue-500">${name}</h5>
+                <p class="text-red">"${body}"</p>
+                <p class="text-yellow-600 text-sm">Posted on ${created}</p>
             </div>
+            ${currentUser === item.fields.name ? `
             <div class="flex justify-end mr-2 mb-2">
                 <a href="/display/delete-comment/${item.pk}/">
-                    <button class="delete-button")">Delete</button>
+                <button class="delete-button">Delete</button>
                 </a>
             </div>
+            ` : ''}
         </div>      
         `;
     });
