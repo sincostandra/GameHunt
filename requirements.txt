@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-django
-gunicorn
-whitenoise
-psycopg2-binary
-requests
-urllib3
-=======
 django
 gunicorn
 whitenoise
@@ -14,4 +6,3 @@ requests
 urllib3
 pandas
 openpyxl
->>>>>>> 320f02c7688d29fe78f1f4130ecbf852bcb527d3
