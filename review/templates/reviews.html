@@ -5,25 +5,62 @@
 <div class="container mx-auto mt-6 px-6 py-4 rounded-xl">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Section for Product Description -->
-        <div class="col-span-1 bg-white shadow-lg rounded-lg p-6">
-            <h2 class="text-2xl font-bold">{{ game.title }}</h2>
-            <p class="text-gray-700 mt-2">{{ game.developer }}</p>
-            <p class="text-gray-700">{{ game.description }}</p>
-            <p class="text-gray-700"> {{game.harga  }}</p>
-            <p class="text-gray-700">{{ book.pub_year }}</p>
+        <div class="col-span-1 bg-gray-900 shadow-xl rounded-lg p-6 self-start border-2 border-gray-700">
+            <!-- Game Image with Default Placeholder -->
+            <img src="{% if game.image_url %}{{ game.image_url }}{% else %}{ static 'image/empty_review.png' }{% endif %}" 
+                 alt="{{ game.name }}" class="w-full h-auto rounded-lg mb-4">
+            <!-- Game Title and Developer -->
+            <h2 class="text-2xl font-bold text-center text-white">{{ game.name }}</h2>
+    
+            <!-- Divider for Details Section -->
+            <div class="border-t-4 border-red-500 my-4"></div>
+    
+            <!-- Details Section -->
+            <div class="text-sm text-gray-300 space-y-2">
+                <div class="flex justify-between">
+                    <span class="font-bold text-white">Year</span>
+                    <span class="text-gray-300">{{ game.year }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+                <div class="flex justify-between">
+
+                    <span class="font-bold text-white">Developer</span>
+                    <span class="text-gray-300">{{ game.developer }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+                <div class="flex justify-between">
+
+                    <span class="font-bold text-white">Genre</span>
+                    <span class="text-gray-300">{{ game.genre }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+
+                <div class="flex justify-between">
+                    <span class="font-bold text-white">Price</span>
+                    <span class="text-gray-300">Rp {{ game.harga }}</span>
+                </div>
+            </div>
+    
+            <div class="border-t-4 border-red-500 my-4"></div>
+            <!-- Game Description -->
+            <p class="text-gray-300 mt-4 text-justify italic">{{ game.description }}</p>
         </div>
 
         <!-- Right Section for Reviews -->
         <div class="col-span-2">
             <div class="grid grid-cols-1 gap-4">
                 <!-- User's Review Section -->
-                <div class="bg-white shadow-lg rounded-lg p-6">
+                <div class="bg-white shadow-lg rounded-lg p-6 border border-red-500">
                     {% if not review_user %}
                         <button id="openReviewModal" class="w-full bg-rose-700 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded-lg">
                             Add Review
                         </button>
                     {% else %}
-                        <div class="bg-rose-50 p-4 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-4">Your Review</h3>
+                        <div class="bg-[#87ceeb] p-4 rounded-lg">
                             <h3 class="font-bold text-lg">{{ review_user.title }}</h3>
                             <p class="text-gray-700">{{ username }}</p>
                             <p class="mt-2">{{ review_user.content }}</p>
@@ -44,7 +81,7 @@
                 <!-- Other Users' Reviews Section -->
                 <div class="bg-white shadow-lg rounded-lg p-6">
                     <h3 class="text-xl font-semibold mb-4">Other Reviews</h3>
-                    <div id="review_cards" class="space-y-4">
+                    <div id="review_cards" class="space-y-4 max-h-96 overflow-y-auto p-4 rounded-lg shadow-sm">
                         <!-- Reviews will be loaded here -->
                     </div>
                 </div>
@@ -189,25 +226,25 @@
         const otherReviews = reviews.filter(review => review.username !== currentUser);
         
         reviewContainer.innerHTML = otherReviews.map(review => `
-            <div class="border-b pb-4 last:border-b-0">
-                <h4 class="font-bold">${review.title}</h4>
-                <p class="text-sm text-gray-600">${review.username}</p>
-                <p class="mt-2">${review.content}</p>
-                <div class="flex items-center justify-between mt-4">
-                    <div class="flex space-x-1 mt-2">
-                        ${[...Array(5)].map((_, i) => `
-                            <span class="text-2xl ${i < review.score ? 'text-yellow-400' : 'text-gray-300'}">★</span>
-                        `).join('')}
+                <div class="p-4 bg-white rounded-lg shadow border border-gray-300">
+                    <h4 class="font-bold">${review.title}</h4>
+                    <p class="text-sm text-gray-600">${review.username}</p>
+                    <p class="mt-2">${review.content}</p>
+                    
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="flex space-x-1 mt-2">
+                            ${[...Array(5)].map((_, i) => `
+                                <span class="text-2xl ${i < review.score ? 'text-yellow-400' : 'text-gray-300'}">★</span>
+                            `).join('')}
+                        </div>
+                        
+                        {% if user.is_staff %}
+                            <button onclick="removeReview(${review.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                Delete
+                            </button>
+                        {% endif %}
                     </div>
-                    {% if user.is_staff %}
-                        <button onclick="removeReview(${review.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
-                            Delete
-                        </button>
-                    {% endif %}
                 </div>
-            </div>
-
-
         `).join('');
     }
 
