@@ -90,7 +90,7 @@
                 <textarea 
                 id="body" name="body" rows="3"
                 placeholder="Enter your comment here..." 
-                class="w-full border border-gray-300 rounded-md p-2 mt-4 focus:border-indigo-700 focus:outline-none resize-none"
+                class="w-full border border-gray-300 rounded-md p-2 mt-4 focus:outline-none resize-none"
                 required></textarea>
             </div>
     
@@ -99,20 +99,8 @@
             </div>
         </form>
 
-
-        <div id="comment_card">
-            <!-- Comments will be displayed here -->
-             {% for comment in comments %}
-             <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300">
-                <div class="p-4 animate-shine">
-                    <h5 class="text-lg font-semibold text-red-500">{{ comment.name }}</h5>
-                    <p class="text-red">{{ comment.body }}</p>
-                    <p class="text-red">Posted on {{ comment.created }}</p>
-                </div>
-            </div> 
-            {% endfor %}
-             
-        </div>
+        <!-- Comments From AJAX -->
+        <div id="comment_card"></div>
         
     </div>
 
@@ -124,24 +112,15 @@
 <script>
     // ===========================POSTAJAX========================================
     function addComment() {
-        document.getElementById("error-message").innerHTML = "";
-        fetch("{% url 'display:add_comment_ajax' %}", {
+        fetch("{% url 'display:add_comment_ajax' id=game.id %}", {
             method: "POST",
             body: new FormData(document.querySelector('#commentForm')),
         })
-        .then(response => {
-            if (response.ok) {
-                document.getElementById("commentForm").reset();
-                console.log("situasi bejir")
-                refreshComments();
-            } else {
-                return response.text().then(text => {
-                    document.getElementById("error-message").innerHTML = '<p>Please fill out all fields correctly.</p>';
-                });
-            }
-        })
+        .then(response => {refreshComments();})
+        
         return false;
     }
+
 
   //============================GETAJAX========================================
   
@@ -157,16 +136,20 @@
   let htmlString = "";
   
   if (comments.length === 0) {
-    htmlString = '<p>No comments yet.</p>';
+    htmlString = '<p class="text-center">No comments yet.</p>';
   } else {
     comments.forEach((item) => {
       htmlString += `
-        <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300">
+        <div class="bg-white rounded-xl border border-grey-300 mt-2 overflow-hidden shadow-xl hover:shadow-2xl transition duration-300">
             <div class="p-4 animate-shine">
-                <p>dadada</p>
-            <h5 class="text-lg font-semibold text-red-500">${item.fields.name}</h5>
-            <p class="text-red">${item.fields.body}</p>
-            <p class="text-red">Posted on ${item.fields.created}</p>
+                <h5 class="text-sm font-semibold text-blue-500">${item.fields.name}</h5>
+                <p class="text-red">"${item.fields.body}"</p>
+                <p class="text-red text-sm">Posted on ${item.fields.created}</p>
+            </div>
+            <div class="flex justify-end mr-2 mb-2">
+                <a href="/display/delete-comment/${item.pk}/">
+                    <button class="delete-button")">Delete</button>
+                </a>
             </div>
         </div>      
         `;
