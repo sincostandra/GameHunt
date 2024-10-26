@@ -6,8 +6,6 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-
-
 def show_search(request):
     game_entries = Game.objects.all()
     context = {

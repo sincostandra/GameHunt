@@ -157,6 +157,7 @@ cursor: pointer;
 .delete-button:hover {
 background-color: #dc2626; /* Darker red on hover */
 }
+
 .form-style form input, form textarea, form select {
     width: 100%;
     padding: 0.5rem;
@@ -176,4 +177,49 @@ background-color: #dc2626; /* Darker red on hover */
     background: linear-gradient(120deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.3));
     background-size: 200% 100%;
     animation: shine 3s infinite;
+}
+
+.address-card {
+    display: flex; /* Use flexbox for two-column layout */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px 5px rgba(0, 0, 0, 0.2); /* Added a spread value */
+    width: 400px; /* Set width for the card */
+}
+
+.left-column {
+    background-color: #ef4444; /* Blue background */
+    color: white; /* Text color for the left column */
+    padding: 20px;
+    width: 30%; /* Occupy half of the card width */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items */
+}
+
+.right-column {
+    padding: 20px;
+    width: 50%; /* Occupy the other half */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center items vertically */
+}
+
+.address{
+    margin: 2px 0; /* Space between lines */
+    font-size: 0.9em; /* Slightly smaller font size */
+    color: black; /* Gray color for text */
+    line-height: 1.5; /* or any desired value */
+}
+
+.label{
+    margin: 6px 0; /* Space between lines */
+    font-size: 1em; /* Slightly smaller font size */
+    color: white; /* Gray color for text */
+    line-height: 1.2; /* or any desired value */
+}
+
+.store{
+    font-size: 1.5rem; /* Slightly smaller font size */
+    color: black; /* Gray color for text */
 }

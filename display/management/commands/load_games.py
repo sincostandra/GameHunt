@@ -21,6 +21,12 @@ class Command(BaseCommand):
                     developer=row['developer'],
                     genre=row['genre'],
                     ratings=row['ratings'],
-                    harga=row['harga']
+                    harga=row['harga'],
+                    toko1=row['toko_1'],
+                    alamat1=row['alamat_1'],
+                    toko2=row['toko_2'],
+                    alamat2=row['alamat_2'],
+                    toko3=row['toko_3'],
+                    alamat3=row['alamat_3']
                 )
         self.stdout.write(self.style.SUCCESS('Successfully loaded game data'))
