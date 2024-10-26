@@ -35,7 +35,9 @@
                                         <span class="text-2xl {% if forloop.counter <= review_user.score %}text-yellow-400{% else %}text-gray-300{% endif %}">★</span>
                                     {% endfor %}
                                 </div>
-                                <button onclick="removeReview({{ review_user.id }})" class="text-red-600 hover:underline">Delete</button>
+                                <button onclick="removeReview({{ review_user.id }})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                    Delete
+                                </button>
                             </div>
                         </div>
                     {% endif %}
@@ -193,12 +195,21 @@
                 <h4 class="font-bold">${review.title}</h4>
                 <p class="text-sm text-gray-600">${review.username}</p>
                 <p class="mt-2">${review.content}</p>
-                <div class="flex space-x-1 mt-2">
-                    ${[...Array(5)].map((_, i) => `
-                        <span class="text-2xl ${i < review.score ? 'text-yellow-400' : 'text-gray-300'}">★</span>
-                    `).join('')}
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex space-x-1 mt-2">
+                        ${[...Array(5)].map((_, i) => `
+                            <span class="text-2xl ${i < review.score ? 'text-yellow-400' : 'text-gray-300'}">★</span>
+                        `).join('')}
+                    </div>
+                    {% if user.is_staff %}
+                        <button onclick="removeReview(${review.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                            Delete
+                        </button>
+                    {% endif %}
                 </div>
             </div>
+
+
         `).join('');
     }
 

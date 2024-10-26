@@ -1,12 +1,12 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from review.models import Review
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # from search.models import Game
-
+from django.contrib.auth.decorators import user_passes_test
 # from books.models import Book
 # from reviews.forms import ReviewForm
 
@@ -126,6 +126,12 @@ def edit_review(request, review_id, game_id):
 def show_json(request):
     data = Game.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    review.delete()
+    return HttpResponse(b"CREATED", status=201)
 
 ### HAPUS KODE DI BAWAH !!!!!!!!
 

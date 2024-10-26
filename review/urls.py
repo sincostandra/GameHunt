@@ -1,5 +1,5 @@
 from django.urls import path    
-from review.views import show_reviews, show_json, get_review_json, create_review_ajax, edit_review, remove_ajax, get_user_review
+from review.views import show_reviews, show_json, get_review_json, create_review_ajax, edit_review, remove_ajax, get_user_review, delete_review
 from review.views import login_user, register, ooo
 
 app_name = 'review'
@@ -12,6 +12,7 @@ urlpatterns = [
     path('edit_reiew', edit_review, name='edit_review'),
     path('remove_ajax', remove_ajax, name='remove_ajax'),
     path('get_user_review/<uuid:game_id>', get_user_review, name='get_user_review'),
+    path('delete-review/<int:review_id>/', delete_review, name='delete_review'),
 
     path('ooo', ooo, name='ooo'),
     path('login/', login_user, name='login'),
