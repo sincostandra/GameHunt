@@ -11,7 +11,7 @@
     <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.veryicon.com%2Ficons%2Fmiscellaneous%2Fmedium-thin-linear-icon%2Farrow-left-55.html%3Fp%3D4&psig=AOvVaw0kyVGfwJsisEoUm4Ks0pai&ust=1729908703502000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLCqoaC6qIkDFQAAAAAdAAAAABAJ">
     <a href="{% url 'news:home_news' %}" class="game-title-link">Back</a>
   </div>
-  <h1 class="text-3xl font-bold">{{ title }}</h1><br>
+  <h1 class="text-3xl w-2/4 font-bold">{{ title }}</h1>
   <div class="my-4 w-2/4 flex justify-between text-sm text-gray-500">
     <span>{{ author }}</span>
     <span>{{ update_date }}</span>
@@ -20,38 +20,39 @@
 
 </div>
 
-<div class="grid my-10 mx-10 w-fit columns-1 fixed bottom-0 right-0">
-  <a class="my-4 edit-button" href="{% url 'news:edit_news' pk %}">Edit News</a>
-  <a class="delete-button" href="{% url 'news:delete_news' pk %}">Delete News</a>
-</div>
-
-{% for news_entry in news_entries %}
-{% if news_entry.id != pk  %}
 <div class="w-4/12 grid columns-1 absolute mt-20 mx-10 right-0 top-3">
   <a href="{% url 'news:home_news' %}" class="font-bold text-xl game-title-link mb-4">Read more</a>
+{% for news_entry in news_entries %}
+{% if news_entry.id != pk  %}
   <div class="relative break-inside-avoid" id="newsTableBody">
     <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 mb-4">
         <div class="flex-1 space-y-2">
             <div class="flex justify-between items-center">
-                <a href="{% url 'news:show_news' news_entry.id %}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
-                    {{ news_entry.title }}
-                </a>
+              <a href="{% url 'news:show_news' news_entry.id %}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
+                {{ news_entry.title }}
+              </a>
             </div>
-
+            
             <p class="text-sm text-gray-600 line-clamp">
             {{ news_entry.article }}
-            </p>
-
-            <div class="flex justify-between text-xs text-gray-500">
-                <span>{{ news_entry.author }}</span>
-                <span>{{ news_entry.update_date }}</span>
-            </div>
+          </p>
+          
+          <div class="flex justify-between text-xs text-gray-500">
+            <span>{{ news_entry.author }}</span>
+            <span>{{ news_entry.update_date }}</span>
+          </div>
         </div>
     </div>
   </div>
+  {% endif %}
+  {% endfor %}
 </div>
-{% else %}
+
+{% if role == 'admin' %}
+<div class="grid my-10 mx-10 w-fit columns-1 fixed bottom-0 right-0">
+  <a class="my-4 edit-button" href="{% url 'news:edit_news' pk %}">Edit News</a>
+  <a class="delete-button" href="{% url 'news:delete_news' pk %}">Delete News</a>
+</div>
 {% endif %}
-{% endfor %}
 
 {% endblock content %}
