@@ -5,7 +5,7 @@ app_name = 'wishlist'
 
 urlpatterns = [
     path('', view_wishlist, name='view_wishlist'),
-    path('delete/<uuid:id>', delete_wishlist, name='delete_wishlist'),
+    path('delete-wishlist/<uuid:id>', delete_wishlist, name='delete_wishlist'),
     path('json/', show_json, name='show_json'),
     path('create-wishlist/', create_wishlist, name='create_wishlist'),
     path('add-wishlist-ajax/', add_wishlist_ajax, name='add_wishlist_ajax'),
