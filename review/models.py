@@ -12,3 +12,9 @@ class Review(models.Model):
     content = models.TextField()
     score = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
+    upvotes = models.ManyToManyField(User, related_name='review_upvotes', blank=True)
+    downvotes = models.ManyToManyField(User, related_name='review_downvotes', blank=True)
+
+    @property
+    def vote_score(self):
+        return self.upvotes.count() - self.downvotes.count()

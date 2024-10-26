@@ -9,6 +9,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import user_passes_test
 # from books.models import Book
 # from reviews.forms import ReviewForm
+from django.db.models import Count, F, Value, IntegerField
+from django.db.models.functions import Coalesce
 
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.core import serializers
@@ -74,14 +76,23 @@ def create_review_ajax(request, game_id):
 
 # Add a new view to get user's review
 
+
 def get_review_json(request, game_id):
-    reviews = Review.objects.filter(game_id=game_id)
+    reviews = Review.objects.filter(game_id=game_id)\
+        .annotate(
+            vote_count=Count('upvotes') - Count('downvotes')
+        )\
+        .order_by('-vote_count', '-date')  # Sort by votes first, then by date
+    
     return JsonResponse([{
         'id': review.id,
         'username': review.user.username,
         'title': review.title,
         'content': review.content,
-        'score': review.score
+        'score': review.score,
+        'vote_score': review.vote_score,
+        'user_upvoted': request.user in review.upvotes.all() if request.user.is_authenticated else False,
+        'user_downvoted': request.user in review.downvotes.all() if request.user.is_authenticated else False
     } for review in reviews], safe=False)
 
 
@@ -126,6 +137,45 @@ def edit_review(request, review_id, game_id):
 def show_json(request):
     data = Game.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@login_required
+@csrf_exempt
+def vote_review(request):
+    if request.method == 'POST':
+        review_id = request.POST.get('review_id')
+        vote_type = request.POST.get('vote_type')
+        
+        try:
+            review = Review.objects.get(pk=review_id)
+            user = request.user
+
+            # Check if user is trying to cancel their vote
+            if vote_type == 'upvote' and user in review.upvotes.all():
+                review.upvotes.remove(user)  # Cancel upvote
+            elif vote_type == 'downvote' and user in review.downvotes.all():
+                review.downvotes.remove(user)  # Cancel downvote
+            else:
+                # Remove any existing votes first
+                review.upvotes.remove(user)
+                review.downvotes.remove(user)
+                
+                # Add new vote
+                if vote_type == 'upvote':
+                    review.upvotes.add(user)
+                elif vote_type == 'downvote':
+                    review.downvotes.add(user)
+
+            return JsonResponse({
+                'status': 'success',
+                'vote_score': review.vote_score,
+                'user_upvoted': user in review.upvotes.all(),
+                'user_downvoted': user in review.downvotes.all()
+            })
+        except Review.DoesNotExist:
+            return JsonResponse({'status': 'error'}, status=404)
+
+    return JsonResponse({'status': 'error'}, status=400)
+
 
 @user_passes_test(lambda u: u.is_staff)
 def delete_review(request, review_id):
