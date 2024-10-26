@@ -18,7 +18,7 @@ function closeModal() {
 }
 
 // Function to submit the form data and update the profile via AJAX
-function updateProfile() {
+async function updateProfile() {
     // Get the form fields
     const firstName = document.getElementById("first_name").value.trim();
     const lastName = document.getElementById("last_name").value.trim();
@@ -38,7 +38,7 @@ function updateProfile() {
     // If all fields are filled, proceed with form submission
     const formData = new FormData(document.getElementById("editProfileForm"));
 
-    fetch("{% url 'userprofile:update_user_profile' %}", {
+    await fetch("{% url 'userprofile:update_user_profile' %}", {
         method: "POST",
         headers: {
             "X-CSRFToken": "{{ csrf_token }}", // CSRF token for security
@@ -62,8 +62,8 @@ function updateProfile() {
 }
 
 // Function to fetch and display the user's profile data
-function fetchUserProfile() {
-    fetch("{% url 'userprofile:get_user_profile' %}")
+async function fetchUserProfile() {
+    await fetch("{% url 'userprofile:get_user_profile' %}")
         .then(response => response.json())
         .then(data => {
             // Update the profile display sections on the main page
@@ -106,8 +106,8 @@ function fetchUserProfile() {
 }
 
 // Optional: Automatically fetch and update profile data on page load
-document.addEventListener("DOMContentLoaded", function () {
-    fetchUserProfile();
+document.addEventListener("DOMContentLoaded", async function () {
+    await fetchUserProfile();
 });
 
 </script>
