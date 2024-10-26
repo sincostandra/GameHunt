@@ -17,3 +17,7 @@ class Game(models.Model):
     alamat2 = models.CharField(max_length=255, null=True, blank=True)  # Optional
     toko3 = models.CharField(max_length=255, null=True, blank=True)  # Optional
     alamat3 = models.CharField(max_length=255, null=True, blank=True)  # Optional
+
+class DataImportStatus(models.Model):
+    id = models.IntegerField(primary_key=True)
+    imported = models.BooleanField(default=False)
