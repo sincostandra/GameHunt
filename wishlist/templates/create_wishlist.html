@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<title>Add to Wishlist</title>
+{% endblock meta %}
+
+{% block content %}
+
+<div class="form-container">
+  <div class="form-header">Add to Wishlist</div>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}:</label>
+        {% csrf_token %}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="submit-button">Add</button>
+  </form>
+</div>
+
+{% endblock %}

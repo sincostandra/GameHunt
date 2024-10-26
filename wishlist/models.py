@@ -4,10 +4,14 @@ import uuid
 from search.models import Game 
 
 # Create your models here.
-class Wishlist(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)  
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)  
+class Game(models.Model):
+    name = models.CharField(max_length=100)
+    developer = models.CharField(max_length=100)
+    genre = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    ratings = models.FloatField()
 
-    def __str__(self):
-        return f"{self.user.username}'s Wishlist - {self.game.name}"
+class Wishlist(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)  
+    game = models.ForeignKey('search.Game', on_delete=models.CASCADE)
+    

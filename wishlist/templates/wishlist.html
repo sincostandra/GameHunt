@@ -1,111 +1,116 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>My Wishlist</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+{% endblock meta %}
+
 {% block content %}
-<div class="container p-4">
-    <!-- Header -->
-    <div class="mb-4 flex justify-between items-center">
-        <h1 class="text-gray-700 text-xl font-medium ml-20">My Wishlist</h1>
-        <div class="flex space-x-2">
-            <button id="delete-selected" class="delete-button" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
-                Delete Game
-            </button>
-            <button id="cancel-delete" class="cancel-button hidden" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
-                Cancel
-            </button>
-        </div>
+<div class="flex flex-col min-h-screen mx-20 my-20">
+    <h1 class="text-3xl font-bold">My Wishlist</h1><br>
+
+    <div class="flex justify-end mb-6">
+        <a href="{% url 'wishlist:create_wishlist' %}" class="styled-button" id="button-wishlist">
+            Add Game to Wishlist
+        </a>
     </div>
 
-    <!-- Wishlist items -->
-    <div id="wishlist-items" class="flex flex-wrap space-x-4 space-y-4">
-        {% for item in wishlists %}
-        <div class="w-1/4" id="wishlist-item-{{ item.id }}">
-            <div class="flex items-center space-x-2">
-                {% include "cards.html" with title=item.game.name value=item.game.description %}
+    <div id="wishlist-card-container">
+        {% if not wishlist_entries %}
+            <div class="flex items-center justify-center min-h-[24rem]">
+                <p class="text-center text-gray-600 text-lg">Your wishlist is empty! Start adding your favorite games.</p>
             </div>
-        </div>
-        {% empty %}
-        <p class="text-[#ef4444] text-s font-medium ml-20">No games in your wishlist.</p>
-        {% endfor %}
-    </div>  
-
-    <!-- Delete confirmation section -->
-    <div id="delete-confirmation" class="hidden mt-4 p-4 bg-gray-200 rounded-lg">
-        <h2 class="text-gray-700 text-lg font-medium mb-2">Select Games to Delete</h2>
-        <div class="flex flex-col space-y-4">
-            {% for item in wishlists %}
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" name="delete-items" value="{{ item.id }}" id="delete-item-{{ item.id }}">
-                <label for="delete-item-{{ item.id }}" class="text-sm text-gray-700">{{ item.game.name }}</label>
+        {% else %}
+            <div id="grid-card-container" class="space-y-4">
+                {% for entry in wishlist_entries %}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 wishlist-card">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <div class="space-y-2 flex-grow">
+                                <a href="/game/detail/{{ entry.pk }}" class="text-xl font-bold text-gray-900 hover:text-gray-700">
+                                    {{ entry.game.name }}
+                                </a>
+                                <p class="text-gray-600">Developer: {{ entry.game.developer }}</p>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-gray-600">Genre: {{ entry.game.genre }}</p>
+                                </div>
+                                <p class="text-xl font-semibold">Price: {{ entry.game.harga }}</p>
+                                <p class="text-sm font-semibold text-gray-800">Rating: {{ entry.game.ratings }}</p>
+                            </div>
+                            <form action="{% url 'wishlist:delete_wishlist' entry.pk %}" method="POST" class="ml-4">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-button">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        <div class="flex space-x-2 mt-2">
-            <button id="confirm-delete" class="delete-button" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
-                Confirm Delete
-            </button>
-            <button id="cancel-confirmation" class="cancel-button" style="padding: 4px 8px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer;">
-                Cancel
-            </button>
-        </div>
+        {% endif %}
     </div>
+</div>
 
 <script>
-
-document.getElementById('delete-selected').addEventListener('click', function() {
-    document.getElementById('delete-confirmation').classList.remove('hidden'); 
-    document.getElementById('cancel-delete').classList.remove('hidden'); 
-});
-
-
-document.getElementById('confirm-delete').addEventListener('click', function() {
-    const selectedItems = Array.from(document.querySelectorAll('input[name="delete-items"]:checked')).map(checkbox => checkbox.value);
-    
-    if (selectedItems.length === 0) {
-        alert('Please select at least one item to delete.');
-        return;
+    async function fetchWishlist(){
+        const response = await fetch("{% url 'wishlist:get_wishlist' %}");
+        const data = await response.json();
+        return data.wishlist;
     }
 
-    if (confirm('Are you sure you want to delete the selected items from your wishlist?')) {
-        const deletionPromises = selectedItems.map(id => {
-            return fetch(`/wishlist/delete/${id}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-            }).then(response => response.json());
-        });
-
-        Promise.all(deletionPromises).then(responses => {
-            responses.forEach((data, index) => {
-                if (data.success) {
-                    document.getElementById(`wishlist-item-${selectedItems[index]}`).remove();
-                } else {
-                    alert('Failed to delete item with id: ' + selectedItems[index]);
-                }
-            });
-            document.getElementById('delete-confirmation').classList.add('hidden');
-            document.getElementById('cancel-delete').classList.add('hidden'); 
-        });
+    function addWishlist(){
+        window.location.href = "{% url 'wishlist:create_wishlist' %}";
     }
-});
 
-document.getElementById('cancel-confirmation').addEventListener('click', function() {
-    const deleteConfirmation = document.getElementById('delete-confirmation');
-    deleteConfirmation.classList.add('hidden'); 
-    document.getElementById('cancel-delete').classList.add('hidden'); 
+    async function refreshWishlist(){
+        const wishlist = await fetchWishlist();
+        const cardContainer = document.getElementById("grid-card-container");
 
-    document.querySelectorAll('input[name="delete-items"]:checked').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-});
+        if (wishlist.length === 0) {
+            document.getElementById("wishlist-card-container").innerHTML = `
+                <div class="empty-wishlist flex items-center justify-center min-h-[24rem]">
+                    <p class="text-center text-gray-600 text-lg">Your wishlist is empty! Start adding your favorite games.</p>
+                </div>
+            `;
+            return;
+        }
 
-document.getElementById('cancel-delete').addEventListener('click', function() {
-    const deleteConfirmation = document.getElementById('delete-confirmation');
-    deleteConfirmation.classList.add('hidden'); 
-    this.classList.add('hidden'); 
+        cardContainer.innerHTML = "";
+        let card = "";
+        for (const data of wishlist){
+            card += `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 wishlist-card">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <div class="space-y-2 flex-grow">
+                                <a href="/game/detail/${data.id}" class="text-xl font-bold text-gray-900 hover:text-gray-700">
+                                    ${DOMPurify.sanitize(data.game__name)}
+                                </a>
+                                <p class="text-gray-600">Developer: ${DOMPurify.sanitize(data.game__developer)}</p>
+                                <p class="text-gray-600">Genre: ${DOMPurify.sanitize(data.game__genre)}</p>
+                                <p class="text-xl font-semibold">Price: ${DOMPurify.sanitize(data.game__harga)}</p>
+                                <p class="text-sm font-semibold text-gray-800">Rating: ${DOMPurify.sanitize(data.game__ratings)}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <form action="delete-wishlist/${data.id}" method="POST" class="ml-4">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                    <button type="submit" class="delete-button">
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-    document.querySelectorAll('input[name="delete-items"]:checked').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-});
+        cardContainer.innerHTML = card;
+    }
+
+    document.getElementById("button-wishlist").addEventListener("click", addWishlist);
+    refreshWishlist();
 </script>
-{% endblock %}
+{% endblock content %}
