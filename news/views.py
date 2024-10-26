@@ -1,27 +1,30 @@
-from django.shortcuts import render
-import datetime
-from django.urls import reverse
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, reverse
 from .forms import NewsForm
 from .models import News
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.core import serializers
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-from django.utils.html import strip_tags
 
 # Create your views here.
-# @login_required
+@login_required
 def home_news(request):
-    return render(request, "home_news.html")
+    if request.user.is_superuser:
+        role = 'admin'
+    else:
+        role = 'user'
+    context = {
+        'role' : role,
+    }
+    return render(request, "home_news.html", context)
 
 def show_news(request, id):
     news = News.objects.get(pk = id)
+    if request.user.is_superuser:
+        role = 'admin'
+    else:
+        role = 'user'
     context = {
+        'role' : role,
         'title' : news.title,
         'author' : news.author,
         'article' : news.article,
@@ -33,6 +36,9 @@ def show_news(request, id):
     return render(request, "news.html", context)
 
 def create_news(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to perform this action.")
+   
     form = NewsForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
@@ -46,6 +52,9 @@ def create_news(request):
     return render(request, "create_news.html", context)
 
 def edit_news(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to perform this action.")
+    
     # Get news entry berdasarkan id
     news = News.objects.get(pk = id)
 
@@ -61,6 +70,9 @@ def edit_news(request, id):
     return render(request, "edit_news.html", context)
 
 def delete_news(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to perform this action.")
+    
     # Get news berdasarkan id
     news = News.objects.get(pk = id)
     # Hapus news

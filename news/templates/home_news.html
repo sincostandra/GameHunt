@@ -7,7 +7,7 @@
 {% endblock meta %}
 {% block content %}
 <div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-gray-100 flex flex-col">
-    <h1 class="text-2xl font-bold mb-4">News</h1>
+    <h1 class="text-5xl font-bold mb-4">News</h1>
     {% if role == 'admin' %}
     <div class="flex justify-end mb-6">
       <a href="{% url 'news:create_news' %}" class="styled-button">

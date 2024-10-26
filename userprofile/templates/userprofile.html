@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{% block meta %}
+{% endblock meta %}
+
+{% block content %}
+
+<section class="w-full overflow-hidden dark:bg-gray-900">
+  <div class="flex flex-col">
+      <!-- Cover Image -->
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw5fHxjb3ZlcnxlbnwwfDB8fHwxNzEwNzQxNzY0fDA&ixlib=rb-4.0.3&q=80&w=1080" alt="User Cover"
+              class="w-full h-[20rem] md:h-[18rem] sm:h-[16rem] xs:h-[12rem] object-cover" />
+
+      <!-- Profile Image and Name -->
+      <div class="sm:w-[80%] xs:w-[90%] mx-auto flex flex-col sm:flex-row items-center mt-[-4rem] sm:mt-[-6rem]">
+        <img src="{% static 'image/logo.png' %}" alt="User Profile"
+        class="rounded-full lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[6rem] xs:h-[6rem] outline outline-2 outline-offset-2 outline-white" />
+        
+        <!-- Full Name -->
+        <h1
+              class="w-full text-center sm:text-left mt-4 sm:mt-0 sm:ml-4 text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-2xl xs:text-xl font-serif">
+              Samuel Abera
+        </h1>
+      </div>
+
+      <!-- Details Section -->
+      <div class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] flex flex-col gap-4 items-center mx-auto mt-6">
+          <!-- Description -->
+          <p class="w-[90%] text-gray-700 dark:text-gray-400 text-sm md:text-md text-center sm:text-left">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam debitis labore consectetur voluptatibus mollitia
+              dolorem veniam omnis ut quibusdam minima sapiente repellendus asperiores explicabo, eligendi odit, dolore similique
+              fugiat dolor, doloremque eveniet. Odit, consequatur. Ratione voluptate exercitationem hic eligendi vitae animi nam
+              in, est earum culpa illum aliquam.
+          </p>
+
+          <!-- Detail Section -->
+          <div class="w-full flex flex-col sm:flex-row justify-around gap-4 py-6">
+              <!-- Column 1 -->
+              <div class="w-full sm:w-[48%]">
+                  <dl class="text-gray-900 dark:text-white">
+                      <div class="flex flex-col pb-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">First Name</dt>
+                          <dd class="text-lg font-semibold">Samuel</dd>
+                      </div>
+                      <div class="flex flex-col py-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Last Name</dt>
+                          <dd class="text-lg font-semibold">Abera</dd>
+                      </div>
+                      <div class="flex flex-col py-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Date Of Birth</dt>
+                          <dd class="text-lg font-semibold">21/02/1997</dd>
+                      </div>
+                      <div class="flex flex-col py-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Gender</dt>
+                          <dd class="text-lg font-semibold">Male</dd>
+                      </div>
+                  </dl>
+              </div>
+
+              <!-- Column 2 -->
+              <div class="w-full sm:w-[48%]">
+                  <dl class="text-gray-900 dark:text-white">
+                      <div class="flex flex-col pb-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Location</dt>
+                          <dd class="text-lg font-semibold">Ethiopia, Addis Ababa</dd>
+                      </div>
+
+                      <div class="flex flex-col pt-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Phone Number</dt>
+                          <dd class="text-lg font-semibold">+251913****30</dd>
+                      </div>
+                      <div class="flex flex-col pt-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email</dt>
+                          <dd class="text-lg font-semibold">samuelabera87@gmail.com</dd>
+                      </div>
+
+                      <div class="flex flex-col pt-3">
+                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Website</dt>
+                          <dd class="text-lg font-semibold hover:text-blue-500">
+                              <a href="https://techakim.com">https://www.teclick.com</a>
+                          </dd>
+                      </div>
+                  </dl>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+{% endblock content %}
