@@ -13,7 +13,7 @@
             <h2 class="text-2xl font-bold text-center text-white">{{ game.name }}</h2>
     
             <!-- Divider for Details Section -->
-            <div class="border-t-4 border-red-500 my-4"></div>
+            <div class="border-t-4 border my-4"></div>
     
             <!-- Details Section -->
             <div class="text-sm text-gray-300 space-y-2">
@@ -42,9 +42,12 @@
                     <span class="font-bold text-white">Price</span>
                     <span class="text-gray-300">Rp {{ game.harga }}</span>
                 </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+
             </div>
     
-            <div class="border-t-4 border-red-500 my-4"></div>
+         
             <!-- Game Description -->
             <p class="text-gray-300 mt-4 text-justify italic">{{ game.description }}</p>
         </div>
@@ -53,14 +56,14 @@
         <div class="col-span-2">
             <div class="grid grid-cols-1 gap-4">
                 <!-- User's Review Section -->
-                <div class="bg-white shadow-lg rounded-lg p-6 border border-red-500">
+                <div class="bg-gray-900 shadow-lg rounded-lg p-6 border border-gray-900">
                     {% if not review_user %}
                         <button id="openReviewModal" class="w-full bg-rose-700 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded-lg">
                             Add Review
                         </button>
                     {% else %}
-                        <h3 class="text-xl font-semibold mb-4">Your Review</h3>
-                        <div class="bg-[#87ceeb] p-4 rounded-lg">
+                        <h3 class="text-xl text-white font-semibold mb-4">Your Review</h3>
+                        <div class="bg-slate-300 p-4 rounded-lg">
                             <h3 class="font-bold text-lg">{{ review_user.title }}</h3>
                             <p class="text-gray-700">{{ username }}</p>
                             <p class="mt-2">{{ review_user.content }}</p>
@@ -79,8 +82,8 @@
                 </div>
 
                 <!-- Other Users' Reviews Section -->
-                <div class="bg-white shadow-lg rounded-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">Other Reviews</h3>
+                <div class="bg-gray-900 shadow-lg rounded-lg p-6">
+                    <h3 class="text-xl text-white font-semibold mb-4">Other Reviews</h3>
                     <div id="review_cards" class="space-y-4 max-h-96 overflow-y-auto p-4 rounded-lg shadow-sm">
                         <!-- Reviews will be loaded here -->
                     </div>
@@ -226,7 +229,7 @@
         const otherReviews = reviews.filter(review => review.username !== currentUser);
         
         reviewContainer.innerHTML = otherReviews.map(review => `
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-300">
+                <div class="p-4 bg-slate-200 rounded-lg shadow border border-gray-300">
                     <h4 class="font-bold">${review.title}</h4>
                     <p class="text-sm text-gray-600">${review.username}</p>
                     <p class="mt-2">${review.content}</p>
