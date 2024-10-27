@@ -7,8 +7,8 @@
 {% block content %}
 
 <div class="flex flex-col min-h-screen mx-20 my-20">
-  <div class="flex space-x-2 my-2">
-    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.veryicon.com%2Ficons%2Fmiscellaneous%2Fmedium-thin-linear-icon%2Farrow-left-55.html%3Fp%3D4&psig=AOvVaw0kyVGfwJsisEoUm4Ks0pai&ust=1729908703502000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLCqoaC6qIkDFQAAAAAdAAAAABAJ">
+  <div class="flex items-center space-x-2 my-2">
+    <img src="https://cdn-icons-png.flaticon.com/512/109/109618.png" class="w-4 h-4">
     <a href="{% url 'news:home_news' %}" class="game-title-link">Back</a>
   </div>
   <h1 class="text-4xl w-3/5 font-bold">{{ title }}</h1>
@@ -25,7 +25,7 @@
 {% for news_entry in news_entries %}
 {% if news_entry.id != pk  %}
   <div class="relative break-inside-avoid" id="newsTableBody">
-    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 mb-4">
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 my-4">
         <div class="flex-1 space-y-2">
             <div class="flex justify-between items-center">
               <a href="{% url 'news:show_news' news_entry.id %}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
