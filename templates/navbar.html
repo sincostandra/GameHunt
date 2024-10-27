@@ -11,7 +11,7 @@
                 <!-- Apply hover to change background and text color -->
                 <a href="{% url 'news:home_news' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">News</a>
                 <a href="{% url 'search:show_search' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Browse Games</a>
-                <a href="#" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Wishlist</a>
+                <a href="{% url 'wishlist:view_wishlist' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Wishlist</a>
             </div>
         </div>
 
@@ -27,24 +27,23 @@
 
             <div id="userDropdown" class="z-50 hidden absolute right-0 mt-2 w-48 bg-white text-black border border-gray-300 py-2">
                 <a href="{% url 'userprofile:userprofile' %}" class="block px-4 py-2 text-sm hover:bg-soft-red hover:text-gray-400">Edit Profile</a>
-                <form action="{% url 'authentication:logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm hover:bg-soft-red hover:text-gray-400">Logout</button>
-                </form>
+                <a href="{% url 'authentication:logout' %}" class="block w-full text-left px-4 py-2 text-sm hover:bg-soft-red hover:text-gray-400">Logout</a>
+
             </div>
         </div>
     </div>
 </nav>
 
 <script>
-    document.getElementById('userMenuButton').addEventListener('click', function() {
+    document.getElementById('userMenuButton').addEventListener('click', function(event) {
+        event.stopPropagation();
         var dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('hidden');
     });
 
     window.addEventListener('click', function(event) {
         var dropdown = document.getElementById('userDropdown');
-        if (!event.target.closest('#userMenuButton')) {
+        if (!event.target.closest('#userMenuButton') && !event.target.closest('#userDropdown')) {
             dropdown.classList.add('hidden');
         }
     });
