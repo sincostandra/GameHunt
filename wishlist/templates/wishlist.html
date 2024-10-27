@@ -37,6 +37,8 @@
                                 </div>
                                 <p class="text-xl font-semibold">Price: {{ entry.game.harga }}</p>
                                 <p class="text-sm font-semibold text-gray-800">Rating: {{ entry.game.ratings }}</p>
+                                <p class="text-sm font-semibold text-gray-800">Toko: {{ entry.game.toko1 }}</p>
+                                <p class="text-sm font-semibold text-gray-800">Alamat: {{ entry.game.alamat1 }}</p>
                             </div>
                             <form action="{% url 'wishlist:delete_wishlist' entry.pk %}" method="POST" class="ml-4">
                                 {% csrf_token %}
@@ -60,10 +62,6 @@
         return data.wishlist;
     }
 
-    function addWishlist(){
-        window.location.href = "{% url 'wishlist:create_wishlist' %}";
-    }
-
     async function refreshWishlist(){
         const wishlist = await fetchWishlist();
         const cardContainer = document.getElementById("grid-card-container");
@@ -79,7 +77,7 @@
 
         cardContainer.innerHTML = "";
         let card = "";
-        for (const data of wishlist){
+        for (const data of wishlist) {
             card += `
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 wishlist-card">
                     <div class="p-6">
@@ -92,6 +90,8 @@
                                 <p class="text-gray-600">Genre: ${DOMPurify.sanitize(data.game__genre)}</p>
                                 <p class="text-xl font-semibold">Price: ${DOMPurify.sanitize(data.game__harga)}</p>
                                 <p class="text-sm font-semibold text-gray-800">Rating: ${DOMPurify.sanitize(data.game__ratings)}</p>
+                                <p class="text-sm font-semibold text-gray-800">Toko: ${DOMPurify.sanitize(data.game__toko1)}</p>
+                                <p class="text-sm font-semibold text-gray-800">Alamat: ${DOMPurify.sanitize(data.game__alamat1)}</p>
                             </div>
                             <div class="flex items-center space-x-2">
                                 <form action="delete-wishlist/${data.id}" method="POST" class="ml-4">
@@ -110,7 +110,49 @@
         cardContainer.innerHTML = card;
     }
 
-    document.getElementById("button-wishlist").addEventListener("click", addWishlist);
+    document.querySelectorAll('.wishlist-button').forEach(button => {
+    button.addEventListener('click', async function(event) {
+        event.preventDefault(); 
+
+        const gameData = {
+            game__id: this.getAttribute('data-id'),
+            game__name: this.getAttribute('data-game-name'),
+            game__developer: this.getAttribute('data-game-developer'),
+            game__genre: this.getAttribute('data-game-genre'),
+            game__price: this.getAttribute('data-game-price'),
+            game__rating: this.getAttribute('data-game-rating'),
+            game__toko1: this.getAttribute('data-game-toko1'),
+            game__alamat1: this.getAttribute('data-game-alamat1'),
+        };
+
+        try {
+            const response = await fetch("{% url 'wishlist:add_wishlist_ajax' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify(gameData)
+            });
+
+            const result = await response.json();
+            if (result.status === "success") {
+                alert("Game added to wishlist!");
+                refreshWishlist(); 
+            } else {
+                alert("Failed to add game to wishlist.");
+            }
+        } catch (error) {
+            console.error("Error adding to wishlist:", error);
+        }
+    });
+});
+
+    document.getElementById("button-wishlist").addEventListener("click", function(event) {
+        // This can be a placeholder for any additional logic when the button is clicked
+        window.location.href = "{% url 'wishlist:create_wishlist' %}";
+    });
+
     refreshWishlist();
 </script>
 {% endblock content %}

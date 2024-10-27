@@ -12,15 +12,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 # Create your views here.
-def add_to_wishlist(request, game_id):
-    game = get_object_or_404(Game, id=game_id)
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user, game=game)
-    if created:
-        messages.success(request, f"'{game.name}' has been added to your wishlist!")
-    else:
-        messages.info(request, f"'{game.name}' is already in your wishlist.")
-    return redirect('view_wishlist')
-
 @login_required
 def view_wishlist(request):
     wishlist_entries = Wishlist.objects.select_related('game').all()
@@ -53,9 +44,9 @@ def show_json(request):
     data = Wishlist.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-@csrf_exempt
 @require_POST
 @login_required
+@csrf_exempt  # Only use if necessary; consider CSRF protection for production@csrf_exempt
 def add_wishlist_ajax(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -85,6 +76,8 @@ def get_wishlist_ajax(request):
                 'game__genre': entry.game.genre,
                 'game__harga': entry.game.harga,
                 'game__ratings': entry.game.ratings,
+                'game__toko1': entry.game.toko1,
+                'game__alamat1': entry.game.alamat1,
             }
             for entry in wishlist_entries
         ]
