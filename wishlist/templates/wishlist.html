@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>My Wishlist</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+{% endblock meta %}
+
+{% block content %}
+<div class="flex flex-col min-h-screen mx-auto my-10 max-w-4xl p-4">
+    <h1 class="mt-0 mb-6 text-3xl font-bold text-center text-gray-900">My Wishlist</h1>
+
+    <div id="wishlist-card-container">
+        {% if not wishlist_entries %}
+            <div class="flex items-center justify-center min-h-[24rem]">
+                <p class="text-center text-gray-600 text-lg">Your wishlist is empty! Start adding your favorite games.</p>
+            </div>
+        {% else %}
+            <div id="grid-card-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for entry in wishlist_entries %}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 wishlist-card">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div class="space-y-2 flex-grow">
+                                <div class="bg-[#f8d7da] p-2 rounded">
+                                    <a href="/game/detail/{{ entry.pk }}" class="text-lg font-bold text-gray-900 hover:text-indigo-600 transition-colors duration-200">
+                                        {{ entry.game.name }}
+                                    </a>
+                                </div>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Developer:</span> {{ entry.game.developer }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Genre:</span> {{ entry.game.genre }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Price:</span> {{ entry.game.harga }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Rating:</span> {{ entry.game.ratings }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Toko:</span> {{ entry.game.toko1 }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Alamat:</span> {{ entry.game.alamat1 }}
+                                </p>                                
+                            </div>
+                            <form action="{% url 'wishlist:delete_wishlist' entry.pk %}" method="POST" class="ml-4">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-red-500 text-white rounded-lg px-3 py-1 transition duration-300 hover:bg-red-600">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>                
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    async function fetchWishlist(){
+        const response = await fetch("{% url 'wishlist:get_wishlist' %}");
+        const data = await response.json();
+        return data.wishlist;
+    }
+
+    async function refreshWishlist(){
+        const wishlist = await fetchWishlist();
+        const cardContainer = document.getElementById("grid-card-container");
+
+        if (wishlist.length === 0) {
+            document.getElementById("wishlist-card-container").innerHTML = `
+                <div class="empty-wishlist flex items-center justify-center min-h-[24rem]">
+                    <p class="text-center text-gray-600 text-lg">Your wishlist is empty! Start adding your favorite games.</p>
+                </div>
+            `;
+            return;
+        }
+
+        cardContainer.innerHTML = "";
+        let card = "";
+        for (const data of wishlist) {
+            card += `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 wishlist-card">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div class="space-y-2 flex-grow">
+                                <div class="bg-[#f8d7da] p-2 rounded">
+                                    <a href="/game/detail/${data.id}" class="text-lg font-bold text-gray-900 hover:text-indigo-600 transition-colors duration-200">
+                                        ${DOMPurify.sanitize(data.game__name)}
+                                    </a>
+                                </div>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Developer:</span> ${DOMPurify.sanitize(data.game__developer)}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Genre:</span> ${DOMPurify.sanitize(data.game__genre)}
+                                </p>
+                                <p class="text-sm font-semibold text-gray-800">
+                                    <span class="font-bold">Price:</span> ${DOMPurify.sanitize(data.game__harga)}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Rating:</span> ${DOMPurify.sanitize(data.game__ratings)}
+                                </p>
+                                <p class="text-sm font-semibold text-gray-800">
+                                    <span class="font-bold">Toko:</span> ${DOMPurify.sanitize(data.game__toko1)}
+                                </p>
+                                <p class="text-sm font-semibold text-gray-800">
+                                    <span class="font-bold">Alamat:</span> ${DOMPurify.sanitize(data.game__alamat1)}
+                                </p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <form action="delete-wishlist/${data.id}" method="POST" class="ml-4">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                    <button type="submit" class="bg-red-500 text-white rounded-lg px-3 py-1 transition duration-300 hover:bg-red-600">
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        cardContainer.innerHTML = card;
+    }
+
+    document.getElementById("button-wishlist").addEventListener("click", addWishlist);
+    refreshWishlist();
+</script>
+{% endblock content %}

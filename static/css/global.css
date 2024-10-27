@@ -351,3 +351,289 @@ background-color: #dc2626; /* Darker red on hover */
     font-size: 1.5rem; /* Slightly smaller font size */
     color: black; /* Gray color for text */
 }
+.form-container {
+max-width: 600px;
+margin: 40px auto; /* Top and bottom padding */
+padding: 30px 20px; /* Inner padding */
+background-color: #ffffff; /* Very light gray for form background */
+border: 2px solid #333333; /* Dark gray border */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.form-header {
+text-align: center;
+margin-bottom: 20px;
+font-size: 1.6rem;
+font-weight: bold;
+color: #1a1a1a; /* Almost black */
+}
+
+.form-group {
+margin-bottom: 16px; /* Space between fields */
+}
+
+.form-label {
+font-weight: bold;
+color: #333333; /* Dark gray */
+margin-bottom: 4px;
+display: block; /* Place label above the input field */
+}
+
+.form-input {
+width: 100%; /* Full width for inputs */
+padding: 12px;
+border: 2px solid #4a4a4a; /* Neutral gray border */
+border-radius: 5px; /* Slight rounding for inputs */
+background-color: white; /* White background */
+transition: all 0.3s ease-in-out;
+outline: none;
+}
+
+.form-input:focus {
+border-color: #1a1a1a; /* Darker gray on focus */
+}
+
+.submit-button {
+width: 100%;
+padding: 12px;
+background-color: #b91c1c; /* Red background */
+color: white;
+border: none;
+border-radius: 5px; /* Slight rounding for button */
+cursor: pointer;
+font-weight: bold;
+transition: background-color 0.3s ease-in-out;
+}
+
+.submit-button:hover {
+background-color: #991b1b; /* Darker red on hover */
+}
+
+.circle-bg {
+stroke: #e5e7eb; /* Light gray */
+stroke-width: 4;
+}
+
+.circle-progress {
+stroke: #ef4444; /* Red */
+stroke-width: 4;
+stroke-linecap: round;
+transition: stroke-dashoffset 0.3s;
+}
+
+.circle-wrapper {
+position: relative;
+width: 70px;
+height: 70px;
+padding: 5px;
+}
+
+.circle-svg {
+width: 100%;
+height: 100%;
+transform: rotate(-90deg); /* Rotate only the SVG */
+}
+
+.circle-text {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+font-size: 1rem;
+font-weight: bold;
+color: #ef4444; /* Red */
+}
+
+/* Truncate long descriptions with ellipsis */
+.line-clamp {
+display: -webkit-box;
+-webkit-line-clamp: 2; /* Limit to 2 lines */
+-webkit-box-orient: vertical;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+/* Link hover effect */
+.game-title-link:hover {
+color: #ef4444; /* Red */
+}
+
+
+.styled-button {
+display: inline-block;
+padding: 10px 20px;
+font-size: 1rem;
+font-weight: 600;
+color: #ef4444; /* Red text */
+border: 2px solid #ef4444; /* Red border */
+border-radius: 0.375rem; /* Rounded corners */
+background-color: transparent; /* Transparent background */
+cursor: pointer;
+transition: all 0.3s ease-in-out;
+}
+
+.styled-button:hover {
+background-color: #ef4444; /* Red background on hover */
+color: white; /* White text on hover */
+}
+
+.edit-button {
+padding: 8px 16px;
+font-size: 0.875rem;
+font-weight: 600;
+color: #ef4444; /* Red text */
+background-color: white; /* White background */
+border: 2px solid #ef4444; /* Red border */
+border-radius: 0.375rem; /* Rounded corners */
+transition: all 0.3s ease-in-out;
+cursor: pointer;
+}
+
+.edit-button:hover {
+background-color: #ef4444; /* Red background on hover */
+color: white; /* White text on hover */
+}
+
+/* Delete Button Styling */
+.delete-button {
+padding: 8px 16px;
+font-size: 0.875rem;
+font-weight: 600;
+color: white; /* White text */
+background-color: #ef4444; /* Red background */
+border: 2px solid #ef4444; /* Red border */
+border-radius: 0.375rem; /* Rounded corners */
+transition: all 0.3s ease-in-out;
+cursor: pointer;
+}
+
+.delete-button:hover {
+background-color: #dc2626; /* Darker red on hover */
+}
+
+
+/* Soft Red Background */
+.bg-soft-red {
+    background-color: #f8d7da; /* Light pinkish red */
+}
+
+/* Red for Buttons */
+.bg-red {
+    background-color: #ef4444; /* Main red color */
+}
+
+.bg-red:hover {
+    background-color: #dc2626; /* Darker red for hover effect */
+}
+
+/* Text Colors */
+.text-soft-red {
+    color: #f8d7da;
+}
+
+.text-red {
+    color: #ef4444;
+}
+
+/* Border Colors */
+.border-soft-red {
+    border-color: #f8d7da;
+}
+
+.border-red {
+    border-color: #ef4444;
+}
+
+/* Button Styling */
+.button-red {
+    background-color: #ef4444; /* Main red color */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+
+.button-red:hover {
+    background-color: #dc2626; /* Darker red on hover */
+}
+
+/* Label Styling for Forms */
+.label-red {
+    color: #ef4444; /* Red text for labels */
+    font-weight: bold;
+}
+
+/* Modal Background for Red Theme */
+.modal-bg {
+    background-color: rgba(239, 68, 68, 0.1); /* Light transparent red */
+}
+
+
+.form-style form input, form textarea, form select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #bcbcbc;
+    border-radius: 0.375rem;
+}
+.form-style form input:focus, form textarea:focus, form select:focus {
+    outline: none;
+    border-color: #674ea7;
+    box-shadow: 0 0 0 3px #674ea7;
+}
+@keyframes shine {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.animate-shine {
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.3));
+    background-size: 200% 100%;
+    animation: shine 3s infinite;
+}
+
+.address-card {
+    display: flex; /* Use flexbox for two-column layout */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px 5px rgba(0, 0, 0, 0.2); /* Added a spread value */
+    width: 400px; /* Set width for the card */
+}
+
+.left-column {
+    background-color: #ef4444; /* Blue background */
+    color: white; /* Text color for the left column */
+    padding: 20px;
+    width: 30%; /* Occupy half of the card width */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items */
+}
+
+.right-column {
+    padding: 20px;
+    width: 50%; /* Occupy the other half */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center items vertically */
+}
+
+.address{
+    margin: 2px 0; /* Space between lines */
+    font-size: 0.9em; /* Slightly smaller font size */
+    color: black; /* Gray color for text */
+    line-height: 1.5; /* or any desired value */
+}
+
+.label{
+    margin: 6px 0; /* Space between lines */
+    font-size: 1em; /* Slightly smaller font size */
+    color: white; /* Gray color for text */
+    line-height: 1.2; /* or any desired value */
+}
+
+.store{
+    font-size: 1.5rem; /* Slightly smaller font size */
+    color: black; /* Gray color for text */
+}
