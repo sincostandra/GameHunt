@@ -13,6 +13,7 @@ from review.forms import ReviewForm
 from search.models import Game
 # Create your views here.
 
+# GET (Read)
 @login_required(login_url='review:login')
 def show_reviews(request, game_id):
     game = Game.objects.get(pk=game_id)
@@ -36,6 +37,7 @@ def show_reviews(request, game_id):
     }
     return render(request, 'reviews.html', context)
 
+# POST (Create) Ajax
 @csrf_exempt
 @login_required
 def create_review_ajax(request, game_id):
@@ -64,8 +66,7 @@ def create_review_ajax(request, game_id):
 
     return HttpResponseNotFound()
 
-# Add a new view to get user's review
-
+# GET Json Data (all review of user)
 def get_review_json(request, game_id):
     reviews = Review.objects.filter(game_id=game_id)\
         .annotate(
@@ -79,13 +80,14 @@ def get_review_json(request, game_id):
         'title': review.title,
         'content': review.content,
         'score': review.score,
-        'date': review.date,
+        'date': str(review.date)[:10] + " " + str(review.date)[11:20],
         'vote_score': review.vote_score,
         'user_upvoted': request.user in review.upvotes.all() if request.user.is_authenticated else False,
         'user_downvoted': request.user in review.downvotes.all() if request.user.is_authenticated else False
     } for review in reviews], safe=False)
 
 
+# GET Json Data (specific one user)
 @login_required
 def get_user_review(request, game_id):
     game = Game.objects.get(pk=game_id)
@@ -101,6 +103,7 @@ def get_user_review(request, game_id):
     except Review.DoesNotExist:
         return JsonResponse({}, status=404)
 
+# POST (Delete) Ajax
 @csrf_exempt
 def remove_ajax(request):
     if request.method == 'POST':
@@ -112,18 +115,7 @@ def remove_ajax(request):
 
     return HttpResponseNotFound()
 
-def edit_review(request, review_id, game_id):
-    review = Review.objects.get(pk = review_id)
-
-    form = ReviewForm(request.POST or None, instance=review)
-
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return HttpResponseRedirect(reverse('review:show_reviews', args=[game_id]))
-
-    context = {'form': form}
-    return render(request, "edit_review.html", context)
-
+# POST AND GET
 @login_required
 @csrf_exempt
 def vote_review(request):

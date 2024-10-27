@@ -2,7 +2,8 @@
 {% load static %}
 {% block content %}
 
-<div class="container mx-auto mt-6 px-6 py-4 rounded-xl">
+<!-- Main Container -->
+<div class="container mx-auto mt-16 px-6 py-4 rounded-xl">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Section for Product Description -->
         <div class="col-span-1 bg-gray-900 shadow-xl rounded-lg p-6 self-start border-2 border-gray-700">
@@ -50,6 +51,13 @@
          
             <!-- Game Description -->
             <p class="text-gray-300 mt-4 text-justify italic">{{ game.description }}</p>
+
+            <div class="flex justify-center mt-12">
+                <a href="/display/{{ game.pk }}" class="edit-button">
+                    Back to Details Game
+                </a>
+            </div>
+
         </div>
 
         <!-- Right Section for Reviews -->
@@ -211,6 +219,7 @@
         }
     }
 
+    // Async refresh reviews
     async function refreshReviews() {
         const reviews = await getReviews();
         const reviewContainer = document.getElementById("review_cards");

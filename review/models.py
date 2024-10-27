@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from search.models import Game
+
+# Model Init
 class Review(models.Model):
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE,  related_name='reviews')
