@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Construct the full path to the CSV file
-        csv_file_path = os.path.join(settings.BASE_DIR, 'news', 'data', 'news_data.csv')
+        csv_file_path = 'static/dataset/news_data.csv'
         
         with open(csv_file_path, newline='',encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
