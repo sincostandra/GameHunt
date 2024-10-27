@@ -11,7 +11,7 @@
                 <!-- Apply hover to change background and text color -->
                 <a href="{% url 'news:home_news' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">News</a>
                 <a href="{% url 'search:show_search' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Browse Games</a>
-                <a href="#" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Wishlist</a>
+                <a href="{% url 'wishlist:view_wishlist' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Wishlist</a>
             </div>
         </div>
 
