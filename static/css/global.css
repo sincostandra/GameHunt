@@ -166,6 +166,10 @@ background-color: #dc2626; /* Darker red on hover */
     background-color: #f8d7da; /* Light pinkish red */
 }
 
+.bg-white {
+    background-color: #ffffff; /* White background */
+}
+
 /* Red for Buttons */
 .bg-red {
     background-color: #ef4444; /* Main red color */
