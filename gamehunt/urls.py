@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('display/', include('display.urls')),
     path('search/', include('search.urls')),
+    path('review/', include('review.urls')),
+    path('news/', include('news.urls')),
     path('authentication/', include('authentication.urls')),
     path('userprofile/', include('userprofile.urls')),
     path('wishlist/', include('wishlist.urls')),

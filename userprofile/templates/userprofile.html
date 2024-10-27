@@ -167,18 +167,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
 
-<section class="w-full overflow-hidden bg-red"> 
+<section class="w-full overflow-hidden bg-white"> 
   <div class="flex flex-col">
     <!-- Cover Image Section -->
     <div class="relative">
-        <!-- Cover Image -->
         <img src="https://wallpaperaccess.com/full/3425543.jpg" alt="User Cover"
             class="w-full h-[20rem] md:h-[18rem] sm:h-[16rem] xs:h-[12rem] object-cover" />
-
-        <!-- Button to Open Modal on Top Right -->
-        <button onclick="openModal()" class="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded shadow-md hover:bg-blue-600 focus:outline-none">
-            Edit Profile
-        </button>
+        <div class="absolute right-4 mt-2">
+            <button onclick="openModal()" class="edit-button">Edit Profile</button>
+        </div>
     </div>
 
 
@@ -189,14 +186,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         <!-- Full Name -->
         <h1   id="username_section"
-              class="w-full text-center sm:text-left mt-4 sm:mt-0 sm:ml-4 text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-2xl xs:text-xl font-serif">
+              class="w-full text-center sm:text-left mt-4 sm:mt-0 sm:ml-4 text-gray-800 dark:text-black lg:text-4xl md:text-3xl sm:text-2xl xs:text-xl font-serif">
         </h1>
       </div>
 
       <!-- Details Section -->
       <div class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] flex flex-col gap-4 items-center mx-auto mt-6">
           <!-- Description -->
-          <div id="description_container" class="w-11/12 text-gray-700 dark:text-gray-400 text-sm md:text-base text-center sm:text-left break-words">
+          <div id="description_container" class="w-11/12 text-black text-sm md:text-base text-center sm:text-left break-words">
               <p id="description_section"></p>
           </div>
 
@@ -207,20 +204,20 @@ document.addEventListener("DOMContentLoaded", async function () {
               <div class="w-full sm:w-[48%]">
                   <dl class="text-gray-900 dark:text-white">
                       <div class="flex flex-col pb-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">First Name</dt>
-                          <dd id="first_name_section" class="text-lg font-semibold">Samuel</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">First Name</dt>
+                          <dd id="first_name_section" class="text-lg text-black">Samuel</dd>
                       </div>
                       <div class="flex flex-col py-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Last Name</dt>
-                          <dd id="last_name_section" class="text-lg font-semibold">Abera</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">Last Name</dt>
+                          <dd id="last_name_section" class="text-lg text-black">Abera</dd>
                       </div>
                       <div class="flex flex-col py-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Date Of Birth</dt>
-                          <dd id="date_of_birth_section" class="text-lg font-semibold">21/02/1997</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">Date of Birth</dt>
+                          <dd id="date_of_birth_section" class="text-lg text-black">21/02/1997</dd>
                       </div>
                       <div class="flex flex-col py-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Gender</dt>
-                          <dd id="gender_section" class="text-lg font-semibold">Male</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">Gender</dt>
+                          <dd id="gender_section" class="text-lg text-black">Male</dd>
                       </div>
                   </dl>
               </div>
@@ -229,17 +226,17 @@ document.addEventListener("DOMContentLoaded", async function () {
               <div class="w-full sm:w-[48%]">
                   <dl class="text-gray-900 dark:text-white">
                       <div class="flex flex-col pb-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Location</dt>
-                          <dd id="location_section" class="text-lg font-semibold">Ethiopia, Addis Ababa</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">Location</dt>
+                          <dd id="location_section" class="text-lg text-black">Ethiopia, Addis Ababa</dd>
                       </div>
 
                       <div class="flex flex-col pt-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Phone Number</dt>
-                          <dd id="phone_number_section" class="text-lg font-semibold">+251913****30</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">Phone Number</dt>
+                          <dd id="phone_number_section" class="text-lg text-black">+251913****30</dd>
                       </div>
                       <div class="flex flex-col pt-3">
-                          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email</dt>
-                          <dd id="email_section" class="text-lg font-semibold">samuelabera87@gmail.com</dd>
+                          <dt class="mb-1 text-red font-bold md:text-lg">Email</dt>
+                          <dd id="email_section" class="text-lg text-black">samuelabera87@gmail.com</dd>
                       </div>
                   </dl>
               </div>
