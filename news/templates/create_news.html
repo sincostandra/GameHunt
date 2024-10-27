@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<title>Add News</title>
+{% endblock meta %}
+
+{% block content %}
+
+<div class="mt-20 form-container">
+  <div class="form-header">Add News</div>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}:</label>
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="submit-button">Add News</button>
+  </form>
+</div>
+
+{% endblock %}

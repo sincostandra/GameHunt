@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Latest Game News from GameHunt</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+{% endblock meta %}
+{% block content %}
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-gray-100 flex flex-col">
+    <h1 class="text-5xl font-bold mb-4">News</h1>
+    {% if role == 'admin' %}
+    <div class="flex justify-end mb-6">
+      <a href="{% url 'news:create_news' %}" class="styled-button">
+        Add News
+      </a>
+    </div>
+    {% endif %}
+
+    <div id="news_cards"></div>
+</div>
+<script>
+  async function getNews(){
+      return fetch("{% url 'news:show_json' %}").then((res) => res.json())
+  }
+
+  async function refreshNews() {
+    document.getElementById("news_cards").innerHTML = "";
+    document.getElementById("news_cards").className = "";
+    const newsEntries = await getNews();
+    let htmlString = "";
+    let classNameString = "";
+
+    if (newsEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                <img src="https://i.pinimg.com/564x/4e/6e/cf/4e6ecf90491e3eba4b368626eef09097.jpg" alt="Sad face" class="w-32 h-32 mb-4"/>
+                <p class="text-center text-gray-600 mt-4">Slow news day...</p>
+            </div>
+        `;
+    }
+    else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+        newsEntries.forEach((item) => {
+            const title = DOMPurify.sanitize(item.fields.title);
+            const article = DOMPurify.sanitize(item.fields.article);
+            const author = DOMPurify.sanitize(item.fields.author);
+            htmlString += `
+            <div class="relative break-inside-avoid" id="newsTableBody">
+                <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 my-4">
+                    <div class="flex-1 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <a href="/news/${item.pk}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
+                                ${title}
+                            </a>
+                        </div>
+
+                        <p class="text-sm text-gray-600 line-clamp">
+                        ${article}
+                        </p>
+
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>${author}</span>
+                            <span>${item.fields.update_date}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            `;
+        });
+    }
+    document.getElementById("news_cards").className = classNameString;
+    document.getElementById("news_cards").innerHTML = htmlString;
+  }
+  refreshNews();
+  const modal = document.getElementById('crudModal');
+  const modalContent = document.getElementById('crudModalContent');
+
+</script>
+{% endblock content %}

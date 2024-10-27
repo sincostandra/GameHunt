@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>{{ game.name }} Details</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+{% endblock meta %}
+
+{% block content %}
+
+<!-- Container for the entire game details section -->
+<section class="container mx-auto p-6 pt-24 justify-center items-center">
+    <div class="flex flex-col bg-white shadow-2xl rounded-3xl p-6 max-w-3xl mx-auto relative">
+        <div class="flex flex-col items-center md:flex-row">
+             <!-- Game Cover Image -->
+            <div class="mt-4 md:ml-4">
+                <img src="{% static 'image/logo.png' %}" alt="Logo" class="w-40 h-40 rounded-xl shadow-xl bg-red-500">
+            </div>
+        
+            <!-- Content -->
+            <div class="mt-4 text-center md:ml-6 md:text-left">
+                <!-- Game Title and Info -->
+                <h1 class="mb-2 text-4xl font-bold">{{ game.name }}</h1>
+                <div class="flex items-center justify-center md:justify-left space-x-2 text-sm text-gray-500">
+                    <!-- Rating -->
+                    <div class="bg-red-500 text-white px-2 py-1 rounded-md font-semibold">
+                        {{ game.ratings }}
+                    </div>
+                    <!-- Developer and Publisher -->
+                    <p class="text-blue-500 font-semibold">{{ game.developer }}</p>
+                    <span>•</span>
+                    <p class="text-blue-500 font-semibold">{{ game.genre }}</p>
+                    <span>•</span>
+                    <!-- Release Date -->
+                    <span>{{ game.year }}</span>
+                </div>
+            </div>
+        </div>
+            
+        <!-- Wishlist Button -->
+        <div class="flex flex-col justify-end md:flex-row mt-6">
+            <a href="#" class="flex items-center justify-center bg-yellow-300 text-white px-4 py-3 mb-2 rounded-md font-semibold md:mr-2 hover:bg-yellow-400 transition duration-300 md:w-1/4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>See Reviews</span>
+            </a>
+            <a href="#" class="flex items-center justify-center bg-blue-600 text-white px-4 py-3 mb-2 rounded-md font-semibold hover:bg-blue-700 transition duration-300 md:w-1/4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.35l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <span>Wishlist</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="flex flex-col justify-center md:flex-row min-h-screen md:space-x-10 space-y-6 md:space-y-0">
+        <!-- Game details section -->
+        <div class="mt-12 w-full md:w-3/5 space-y-6">
+            <!-- Individual details using card_detail.html -->
+            {% include "card_detail.html" with title='Description' value=game.description %}
+            {% include "card_detail.html" with title='Ratings' value=game.ratings %}
+            {% include "card_detail.html" with title='Price' value=game.harga %}
+            {% include "card_detail.html" with title='Developer' value=game.developer %}
+            {% include "card_detail.html" with title='Genre' value=game.genre %}
+            {% include "card_detail.html" with title='Year' value=game.year %}
+            {% include "card_store.html" with store=game.toko1 address=game.alamat1 %}
+            {% if game.toko2 %}
+                {% include "card_store.html" with store=game.toko2 address=game.alamat2 %}
+            {% endif %}
+            {% if game.toko3 %}
+                {% include "card_store.html" with store=game.toko3 address=game.alamat3 %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Back to Game List button -->
+    <div class="flex justify-center mt-12">
+        <a href="{% url 'search:show_search' %}" class="edit-button">
+            Back to Game List
+        </a>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="flex flex-col mx-auto w-full md:w-1/2">
+        
+        <form id="commentForm">
+            {% csrf_token %}
+            <div class="w-full mx-auto mt-4">
+                <label for="body" class="text-left text-black text-4xl font-bold mt-4">Comments</label>
+                <textarea 
+                id="body" name="body" rows="3"
+                placeholder="Enter your comment here..." 
+                class="w-full border border-gray-300 rounded-md p-2 mt-4 focus:outline-none resize-none"
+                required></textarea>
+            </div>
+    
+            <div class="flex justify-end">
+                <button type="submit" id="commentButton" class="w-1/5 edit-button justify-end" onclick="addComment()">Post</button>
+            </div>
+        </form>
+
+        <!-- Comments From AJAX -->
+        <div id="comment_card"></div>
+        
+    </div>
+
+    <div class="flex justify-center mt-12">
+        <p class="text-gray-500 text-sm">© 2024 GameHunt. All rights reserved.</p>
+    </div>
+</section>
+
+<script>
+    // ===========================POSTAJAX========================================
+    function addComment() {
+        fetch("{% url 'display:add_comment_ajax' id=game.id %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#commentForm')),
+        })
+        .then(response => {refreshComments();})
+        
+        return false;
+    }
+
+
+  //============================GETAJAX========================================
+  
+  async function getComments(){
+    return fetch("{% url 'display:show_json_by_id' id=game.id %}").then((res) => res.json())
+  }
+
+  async function refreshComments() {
+  const commentsContainer = document.getElementById("comment_card");
+  commentsContainer.innerHTML = "";
+  const comments = await getComments();
+
+  let htmlString = "";
+  const currentUser = "{{ user.username }}";
+  if (comments.length === 0) {
+    htmlString = '<p class="text-center">No comments yet.</p>';
+  } else {
+    comments.forEach((item) => {
+        const name = DOMPurify.sanitize(item.fields.name);
+        const body = DOMPurify.sanitize(item.fields.body);
+        const created = DOMPurify.sanitize(item.fields.created);
+      htmlString += `
+        <div class="bg-white rounded-xl border border-grey-300 mt-2 overflow-hidden shadow-xl hover:shadow-2xl transition duration-300">
+            <div class="p-4 animate-shine">
+                <h5 class="text-sm font-semibold text-blue-500">${name}</h5>
+                <p class="text-red">"${body}"</p>
+                <p class="text-yellow-600 text-sm">Posted on ${created}</p>
+            </div>
+            ${currentUser === item.fields.name ? `
+            <div class="flex justify-end mr-2 mb-2">
+                <a href="/display/delete-comment/${item.pk}/">
+                <button class="delete-button">Delete</button>
+                </a>
+            </div>
+            ` : ''}
+        </div>      
+        `;
+    });
+  }
+
+  commentsContainer.innerHTML = htmlString;
+}
+
+refreshComments();
+</script>
+{% endblock content %}
