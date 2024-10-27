@@ -7,14 +7,8 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="flex flex-col min-h-screen mx-20 my-20">
-    <h1 class="text-3xl font-bold">My Wishlist</h1><br>
-
-    <div class="flex justify-end mb-6">
-        <a href="{% url 'wishlist:create_wishlist' %}" class="styled-button" id="button-wishlist">
-            Add Game to Wishlist
-        </a>
-    </div>
+<div class="flex flex-col min-h-screen mx-auto my-10 max-w-4xl p-4">
+    <h1 class="mt-0 mb-6 text-3xl font-bold text-center text-gray-900">My Wishlist</h1>
 
     <div id="wishlist-card-container">
         {% if not wishlist_entries %}
@@ -22,33 +16,45 @@
                 <p class="text-center text-gray-600 text-lg">Your wishlist is empty! Start adding your favorite games.</p>
             </div>
         {% else %}
-            <div id="grid-card-container" class="space-y-4">
+            <div id="grid-card-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for entry in wishlist_entries %}
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 wishlist-card">
-                    <div class="p-6">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 wishlist-card">
+                    <div class="p-4">
                         <div class="flex justify-between items-start">
                             <div class="space-y-2 flex-grow">
-                                <a href="/game/detail/{{ entry.pk }}" class="text-xl font-bold text-gray-900 hover:text-gray-700">
-                                    {{ entry.game.name }}
-                                </a>
-                                <p class="text-gray-600">Developer: {{ entry.game.developer }}</p>
-                                <div class="flex justify-between items-center">
-                                    <p class="text-gray-600">Genre: {{ entry.game.genre }}</p>
+                                <div class="bg-[#f8d7da] p-2 rounded">
+                                    <a href="/game/detail/{{ entry.pk }}" class="text-lg font-bold text-gray-900 hover:text-indigo-600 transition-colors duration-200">
+                                        {{ entry.game.name }}
+                                    </a>
                                 </div>
-                                <p class="text-xl font-semibold">Price: {{ entry.game.harga }}</p>
-                                <p class="text-sm font-semibold text-gray-800">Rating: {{ entry.game.ratings }}</p>
-                                <p class="text-sm font-semibold text-gray-800">Toko: {{ entry.game.toko1 }}</p>
-                                <p class="text-sm font-semibold text-gray-800">Alamat: {{ entry.game.alamat1 }}</p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Developer:</span> {{ entry.game.developer }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Genre:</span> {{ entry.game.genre }}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-bold">Price:</span> {{ entry.game.harga }}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Rating:</span> {{ entry.game.ratings }}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-bold">Toko:</span> {{ entry.game.toko1 }}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-bold">Alamat:</span> {{ entry.game.alamat1 }}
+                                </p>                                
                             </div>
                             <form action="{% url 'wishlist:delete_wishlist' entry.pk %}" method="POST" class="ml-4">
                                 {% csrf_token %}
-                                <button type="submit" class="delete-button">
-                                    Delete
+                                <button type="submit" class="bg-red-500 text-white rounded-lg px-3 py-1 transition duration-300 hover:bg-red-600">
+                                    Remove
                                 </button>
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>                
                 {% endfor %}
             </div>
         {% endif %}
@@ -79,24 +85,38 @@
         let card = "";
         for (const data of wishlist) {
             card += `
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 wishlist-card">
-                    <div class="p-6">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 wishlist-card">
+                    <div class="p-4">
                         <div class="flex justify-between items-start">
                             <div class="space-y-2 flex-grow">
-                                <a href="/game/detail/${data.id}" class="text-xl font-bold text-gray-900 hover:text-gray-700">
-                                    ${DOMPurify.sanitize(data.game__name)}
-                                </a>
-                                <p class="text-gray-600">Developer: ${DOMPurify.sanitize(data.game__developer)}</p>
-                                <p class="text-gray-600">Genre: ${DOMPurify.sanitize(data.game__genre)}</p>
-                                <p class="text-xl font-semibold">Price: ${DOMPurify.sanitize(data.game__harga)}</p>
-                                <p class="text-sm font-semibold text-gray-800">Rating: ${DOMPurify.sanitize(data.game__ratings)}</p>
-                                <p class="text-sm font-semibold text-gray-800">Toko: ${DOMPurify.sanitize(data.game__toko1)}</p>
-                                <p class="text-sm font-semibold text-gray-800">Alamat: ${DOMPurify.sanitize(data.game__alamat1)}</p>
+                                <div class="bg-[#f8d7da] p-2 rounded">
+                                    <a href="/game/detail/${data.id}" class="text-lg font-bold text-gray-900 hover:text-indigo-600 transition-colors duration-200">
+                                        ${DOMPurify.sanitize(data.game__name)}
+                                    </a>
+                                </div>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-bold">Developer:</span> ${DOMPurify.sanitize(data.game__developer)}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-bold">Genre:</span> ${DOMPurify.sanitize(data.game__genre)}
+                                </p>
+                                <p class="text-sm font-semibold text-gray-600">
+                                    <span class="font-bold">Price:</span> ${DOMPurify.sanitize(data.game__harga)}
+                                </p>
+                                <p class="text-sm text-gray-800">
+                                    <span class="font-bold">Rating:</span> ${DOMPurify.sanitize(data.game__ratings)}
+                                </p>
+                                <p class="text-sm font-semibold text-gray-800">
+                                    <span class="font-bold">Toko:</span> ${DOMPurify.sanitize(data.game__toko1)}
+                                </p>
+                                <p class="text-sm font-semibold text-gray-800">
+                                    <span class="font-bold">Alamat:</span> ${DOMPurify.sanitize(data.game__alamat1)}
+                                </p>
                             </div>
                             <div class="flex items-center space-x-2">
                                 <form action="delete-wishlist/${data.id}" method="POST" class="ml-4">
                                     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                    <button type="submit" class="delete-button">
+                                    <button type="submit" class="bg-red-500 text-white rounded-lg px-3 py-1 transition duration-300 hover:bg-red-600">
                                         Remove
                                     </button>
                                 </form>
@@ -106,47 +126,8 @@
                 </div>
             `;
         }
-
         cardContainer.innerHTML = card;
     }
-
-    document.querySelectorAll('.wishlist-button').forEach(button => {
-    button.addEventListener('click', async function(event) {
-        event.preventDefault(); 
-
-        const gameData = {
-            game__id: this.getAttribute('data-id'),
-            game__name: this.getAttribute('data-game-name'),
-            game__developer: this.getAttribute('data-game-developer'),
-            game__genre: this.getAttribute('data-game-genre'),
-            game__price: this.getAttribute('data-game-price'),
-            game__rating: this.getAttribute('data-game-rating'),
-            game__toko1: this.getAttribute('data-game-toko1'),
-            game__alamat1: this.getAttribute('data-game-alamat1'),
-        };
-
-        try {
-            const response = await fetch("{% url 'wishlist:add_wishlist_ajax' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify(gameData)
-            });
-
-            const result = await response.json();
-            if (result.status === "success") {
-                alert("Game added to wishlist!");
-                refreshWishlist(); 
-            } else {
-                alert("Failed to add game to wishlist.");
-            }
-        } catch (error) {
-            console.error("Error adding to wishlist:", error);
-        }
-    });
-});
 
     document.getElementById("button-wishlist").addEventListener("click", addWishlist);
     refreshWishlist();

@@ -26,14 +26,17 @@ def view_wishlist(request):
     return render(request, 'wishlist.html', {'wishlist_entries': wishlist_entries})
 
 @login_required
-def create_wishlist(request):
-    form = WishlistForm(request.POST or None)
+def create_wishlist(request, game_id):
+    form = WishlistForm(request.POST or None, initial={'game': game_id})
 
     if form.is_valid() and request.method == "POST":
         form.save()
-        return redirect('wishlist:view_wishlist') 
+        return redirect('wishlist:view_wishlist')
 
-    context = {'form': form}
+    context = {
+        'form': form,
+        'game_id': game_id
+    }
     return render(request, "create_wishlist.html", context)
 
 @login_required
