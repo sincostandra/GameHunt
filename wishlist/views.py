@@ -15,7 +15,10 @@ from django.views.decorators.http import require_POST
 @login_required
 def view_wishlist(request):
     wishlist_entries = Wishlist.objects.select_related('game').all()
-    role = 'admin' if request.user.is_superuser else 'user'
+    if request.user.is_superuser:
+        role = 'admin'
+    else:
+        role = 'user' 
     context = {
         'wishlist_entries': wishlist_entries,
         'role': role
@@ -46,7 +49,7 @@ def show_json(request):
 
 @require_POST
 @login_required
-@csrf_exempt  # Only use if necessary; consider CSRF protection for production@csrf_exempt
+@csrf_exempt  
 def add_wishlist_ajax(request):
     if request.method == 'POST':
         data = json.loads(request.body)

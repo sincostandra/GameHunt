@@ -148,11 +148,7 @@
     });
 });
 
-    document.getElementById("button-wishlist").addEventListener("click", function(event) {
-        // This can be a placeholder for any additional logic when the button is clicked
-        window.location.href = "{% url 'wishlist:create_wishlist' %}";
-    });
-
+    document.getElementById("button-wishlist").addEventListener("click", addWishlist);
     refreshWishlist();
 </script>
 {% endblock content %}
