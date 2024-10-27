@@ -9,9 +9,9 @@
 
             <div class="hidden md:flex space-x-6">
                 <!-- Apply hover to change background and text color -->
-                <a href="#" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">News</a>
-                <a href="#" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Browse Games</a>
-                <a href="#" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Wishlist</a>
+                <a href="{% url 'news:home_news' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">News</a>
+                <a href="{% url 'search:show_search' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Browse Games</a>
+                <a href="{% url 'wishlist:view_wishlist' %}" class="px-3 py-2 rounded hover:bg-red-700 hover:text-gray-400">Wishlist</a>
             </div>
         </div>
 
@@ -35,14 +35,15 @@
 </nav>
 
 <script>
-    document.getElementById('userMenuButton').addEventListener('click', function() {
+    document.getElementById('userMenuButton').addEventListener('click', function(event) {
+        event.stopPropagation();
         var dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('hidden');
     });
 
     window.addEventListener('click', function(event) {
         var dropdown = document.getElementById('userDropdown');
-        if (!event.target.closest('#userMenuButton')) {
+        if (!event.target.closest('#userMenuButton') && !event.target.closest('#userDropdown')) {
             dropdown.classList.add('hidden');
         }
     });
