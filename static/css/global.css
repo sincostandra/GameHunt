@@ -36,7 +36,7 @@ transition: all 0.3s ease-in-out;
 outline: none;
 }
 
-.form-input:focus form input:focus, form textarea:focus, form select:focus {
+.form-input:focus {
 border-color: #1a1a1a; /* Darker gray on focus */
 }
 
@@ -159,3 +159,64 @@ cursor: pointer;
 .delete-button:hover {
 background-color: #dc2626; /* Darker red on hover */
 }
+
+
+/* Soft Red Background */
+.bg-soft-red {
+    background-color: #f8d7da; /* Light pinkish red */
+}
+
+/* Red for Buttons */
+.bg-red {
+    background-color: #ef4444; /* Main red color */
+}
+
+.bg-red:hover {
+    background-color: #dc2626; /* Darker red for hover effect */
+}
+
+/* Text Colors */
+.text-soft-red {
+    color: #f8d7da;
+}
+
+.text-red {
+    color: #ef4444;
+}
+
+/* Border Colors */
+.border-soft-red {
+    border-color: #f8d7da;
+}
+
+.border-red {
+    border-color: #ef4444;
+}
+
+/* Button Styling */
+.button-red {
+    background-color: #ef4444; /* Main red color */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+
+.button-red:hover {
+    background-color: #dc2626; /* Darker red on hover */
+}
+
+/* Label Styling for Forms */
+.label-red {
+    color: #ef4444; /* Red text for labels */
+    font-weight: bold;
+}
+
+/* Modal Background for Red Theme */
+.modal-bg {
+    background-color: rgba(239, 68, 68, 0.1); /* Light transparent red */
+}
+
