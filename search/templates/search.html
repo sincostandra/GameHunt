@@ -1,30 +1,73 @@
 {% extends 'base.html' %}
 {% block content %}
 <!-- Title -->
-<h1 class="text-2xl font-bold text-center mt-4">Game Hunt</h1>
+<h1 class="text-2xl font-bold text-center mt-4">GameHunt</h1>
 
 <!-- Search Bar -->
-<div class="max-w-3xl mx-auto mt-4">
-  <input 
-    type="text" 
-    id="searchInput" 
-    placeholder="Search games..." 
-    class="w-full border border-gray-300 rounded-md p-2 focus:border-indigo-700 focus:outline-none" 
-    onkeyup="filterTable()"
-  >
+<div class="max-w-3xl mx-auto mt-4 flex items-center">
+  <!-- Search Input -->
+  {% if role != 'admin' %}
+  <div class="w-[85%]">
+  {% else %}
+  <div class="w-[74%]">
+  {% endif %}
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Search games..." 
+      class="w-full border border-gray-300 rounded-md p-2 focus:border-indigo-700 focus:outline-none" 
+      onkeyup="filterTable()"
+    >
+  </div>
+
+  <!-- Only show sorting and add button if the user is an admin -->
+  {% if role == 'admin' %}
+    <!-- Filter Button -->
+    <div class="w-[15%] ml-[0.75%]">
+      <select 
+        id="sortOptions" 
+        class="styled-button bg-white border border-gray-500 text-black hover:bg-gray-100 hover:text-gray-500 py-2.2 px-2 rounded-md flex items-center justify-center text-sm transition duration-300"
+        onchange="sortGames()"
+      >
+        <option value="">Sort By</option>
+        <option value="rating">Rating</option>
+        <option value="name">Name</option>
+        <option value="developer">Developer</option>
+        <option value="price">Price</option>
+      </select>
+    </div>
+
+    <!-- Plus Button (Square Shape) -->
+    <div class="w-[10%]">
+      <button 
+        data-modal-target="crudModal" 
+        data-modal-toggle="crudModal" 
+        onclick="showModal('add', '');" 
+        class="styled-button bg-white border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-gray-100 font-bold rounded-md flex items-center justify-center transition duration-300"
+        style="width: 40px; height: 40px;"
+      >
+        <span class="text-xl font-bold" style="line-height: 0; position: relative; top: -3px;">+</span>
+      </button>
+    </div>
+    
+  {%else%}
+  <!-- Filter Button -->
+  <div class="w-[15%] ml-[0.75%]">
+    <select 
+      id="sortOptions" 
+      class="styled-button bg-white border border-gray-500 text-black hover:bg-gray-100 hover:text-gray-500 py-2.2 px-2 rounded-md flex items-center justify-center text-sm transition duration-300"
+      onchange="sortGames()"
+    >
+      <option value="">Sort By</option>
+      <option value="rating">Rating</option>
+      <option value="name">Name</option>
+      <option value="developer">Developer</option>
+      <option value="price">Price</option>
+    </select>
+  </div>
+  {%endif%}
 </div>
 
-<!-- Buttons Aligned to the Right -->
-<div class="flex justify-end max-w-3xl mx-auto mt-2 space-x-2">
-  <button 
-    data-modal-target="crudModal" 
-    data-modal-toggle="crudModal" 
-    onclick="showModal();" 
-    class="styled-button"
-  >
-    Add New Game Entry
-  </button>
-</div>
 
 
 <div id = "game_entry_cards"></div>
@@ -177,10 +220,49 @@
   const modal = document.getElementById('crudModal');
   const modalContent = document.getElementById('crudModalContent');
 
-  function showModal() {
+  async function getSpecificEntry(pk){
+    return fetch(`json/${pk}`).then((res) => res.json())
+  }
+  async function showModal(type, pk) {
+      let gameEntryForm = document.getElementById("gameEntryForm");
+      let newGameEntryForm = gameEntryForm.cloneNode(true);
+      gameEntryForm.parentNode.replaceChild(newGameEntryForm, gameEntryForm);
       const modal = document.getElementById('crudModal');
       const modalContent = document.getElementById('crudModalContent');
+      if (type =='edit'){
+        // console.log(pk);
+        const full_data = await getSpecificEntry(pk);
+        const data = full_data[0]
+        console.log(data.fields)
+        // Isi setiap input dengan data JSON
+        modalContent.querySelector('#name').value = data.fields.name || '';
+        modalContent.querySelector('#year').value = data.fields.year || '';
+        modalContent.querySelector('#description').value = data.fields.description || '';
+        modalContent.querySelector('#developer').value = data.fields.developer || '';
+        modalContent.querySelector('#genre').value = data.fields.genre || '';
+        modalContent.querySelector('#ratings').value = data.fields.ratings || '';
+        modalContent.querySelector('#harga').value = data.fields.harga || '';
+        modalContent.querySelector('#toko1').value = data.fields.toko1 || '';
+        modalContent.querySelector('#alamat1').value = data.fields.alamat1 || '';
+        modalContent.querySelector('#toko2').value = data.fields.toko2 || '';
+        modalContent.querySelector('#alamat2').value = data.fields.alamat2 || '';
+        modalContent.querySelector('#toko3').value = data.fields.toko3 || '';
+        modalContent.querySelector('#alamat3').value = data.fields.alamat3 || '';
 
+        // Menambahkan event listener edit
+        newGameEntryForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            editGameEntry(pk); 
+        });
+
+      }
+      else{
+        // Menambahkan event listener submit
+        newGameEntryForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          addGameEntry();
+        })
+      } 
       modal.classList.remove('hidden'); 
       setTimeout(() => {
         modalContent.classList.remove('opacity-0', 'scale-95');
@@ -217,14 +299,24 @@
     return false;
   }
 
-  document.getElementById("gameEntryForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    addGameEntry();
-  })
+  function editGameEntry(pk) {
+    fetch(`edit-game-ajax/${pk}`, {
+      method: "POST",
+      body: new FormData(document.querySelector('#gameEntryForm')),
+    })
+    .then(response => refreshGameEntries())
+
+    document.getElementById("gameEntryForm").reset(); 
+    document.querySelector("[data-modal-toggle='crudModal']").click();
+
+    return false;
+  }
+  
 //============================GETAJAX========================================
   async function getGameEntries(){
     return fetch("{% url 'search:show_json' %}").then((res) => res.json())
   }
+
 
   async function refreshGameEntries() {
   const gameCardsContainer = document.getElementById("game_entry_cards");
@@ -234,10 +326,10 @@
   let htmlString = "";
   
   if (gameEntries.length === 0) {
-    htmlString = '<p>No games available in the database.</p>';
+    htmlString = '';
   } else {
     gameEntries.forEach((item) => {
-      const ratingOffset = 113 - (item.fields.ratings / 5) * 113; // Calculate stroke-dashoffset based on rating
+      const ratingOffset = 113 - (item.fields.ratings / 5) * 111; // Calculate stroke-dashoffset based on rating
 
       htmlString += `
       <div id="gameTableBody">
@@ -247,14 +339,14 @@
               <a href="/search/edit-game/${item.pk}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
                 ${item.fields.name}
               </a>
+              {% if role == 'admin' %}
               <div class="flex space-x-2">
-                <a href="/search/edit-game/${item.pk}">
-                  <button class="edit-button">Edit</button>
-                </a>
+                  <button class="edit-button" onclick = "showModal('edit','${item.pk}')"">Edit</button>
                 <a href="/search/delete/${item.pk}">
                   <button class="delete-button">Delete</button>
                 </a>
               </div>
+              {% endif %}
             </div>
 
             <p class="text-sm text-gray-600 line-clamp">
@@ -319,6 +411,35 @@ function filterTable() {
   });
 }
 
+
+function sortGames() {
+  const sortBy = document.getElementById('sortOptions').value;
+  const gameCards = Array.from(document.querySelectorAll('#gameTableBody'));
+
+  const compareFunctions = {
+    'rating': (a, b) => parseFloat(b.querySelector('.circle-text').innerText) - parseFloat(a.querySelector('.circle-text').innerText),
+    'name': (a, b) => a.querySelector('.game-title-link').innerText.localeCompare(b.querySelector('.game-title-link').innerText),
+    'developer': (a, b) => a.querySelector('.text-xs span:first-child').innerText.localeCompare(b.querySelector('.text-xs span:first-child').innerText),
+    'price': (a, b) => {
+      // Mengambil teks harga tanpa 'Price:'
+      const priceTextA = a.querySelector('.text-sm.font-semibold').innerText.replace('Price: ', '');
+      const priceTextB = b.querySelector('.text-sm.font-semibold').innerText.replace('Price: ', '');
+      
+      // Menghapus karakter selain angka untuk parsing
+      const priceA = parseFloat(priceTextA.replace(/[Rp.,\s]/g, '')); 
+      const priceB = parseFloat(priceTextB.replace(/[Rp.,\s]/g, ''));
+      return priceA - priceB;
+    }
+};
+
+  if (sortBy) {
+    gameCards.sort(compareFunctions[sortBy]);
+  }
+
+  const gameCardsContainer = document.getElementById('game_entry_cards');
+  gameCardsContainer.innerHTML = '';
+  gameCards.forEach(card => gameCardsContainer.appendChild(card));
+}
 </script>
 
 {% endblock %}

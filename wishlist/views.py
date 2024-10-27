@@ -21,21 +21,17 @@ def add_to_wishlist(request, game_id):
         messages.info(request, f"'{game.name}' is already in your wishlist.")
     return redirect('view_wishlist')
 
-# @login_required
+@login_required
 def view_wishlist(request):
     wishlist_entries = Wishlist.objects.select_related('game').all()
-    role = None
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            role = 'admin'
-        else:
-            role = 'user'
+    role = 'admin' if request.user.is_superuser else 'user'
     context = {
         'wishlist_entries': wishlist_entries,
         'role': role
     }
     return render(request, 'wishlist.html', {'wishlist_entries': wishlist_entries})
 
+@login_required
 def create_wishlist(request):
     form = WishlistForm(request.POST or None)
 
@@ -46,17 +42,20 @@ def create_wishlist(request):
     context = {'form': form}
     return render(request, "create_wishlist.html", context)
 
+@login_required
 def delete_wishlist(request, id):
     wishlist = Wishlist.objects.get(pk = id)
     wishlist.delete()
     return HttpResponseRedirect(reverse('wishlist:view_wishlist'))
 
+@login_required
 def show_json(request):
     data = Wishlist.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 @csrf_exempt
 @require_POST
+@login_required
 def add_wishlist_ajax(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -73,7 +72,8 @@ def add_wishlist_ajax(request):
 
     else:
         return JsonResponse({'message': 'BAD REQUEST', 'status': 400}, status=400)
-    
+
+@login_required
 def get_wishlist_ajax(request):
     wishlist_entries = Wishlist.objects.select_related('game').all()
     data = {

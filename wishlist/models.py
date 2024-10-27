@@ -14,7 +14,6 @@ class Game(models.Model):
 class Wishlist(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)  
     game = models.ForeignKey('search.Game', on_delete=models.CASCADE)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.game.name
