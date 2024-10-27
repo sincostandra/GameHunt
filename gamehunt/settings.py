@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'display',
     'search',
     'news',
+    'review',
     'authentication',
     'userprofile'
 ]

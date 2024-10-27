@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Main Container -->
+<div class="container mx-auto mt-16 px-6 py-4 rounded-xl">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Section for Product Description -->
+        <div class="col-span-1 bg-gray-900 shadow-xl rounded-lg p-6 self-start border-2 border-gray-700">
+            <!-- Game Title and Developer -->
+            <h2 class="text-2xl font-bold text-center text-white">{{ game.name }}</h2>
+    
+            <!-- Divider for Details Section -->
+            <div class="border-t-4 border my-4"></div>
+    
+            <!-- Details Section -->
+            <div class="text-sm text-gray-300 space-y-2">
+                <div class="flex justify-between">
+                    <span class="font-bold text-white">Year</span>
+                    <span class="text-gray-300">{{ game.year }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+                <div class="flex justify-between">
+
+                    <span class="font-bold text-white">Developer</span>
+                    <span class="text-gray-300">{{ game.developer }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+                <div class="flex justify-between">
+
+                    <span class="font-bold text-white">Genre</span>
+                    <span class="text-gray-300">{{ game.genre }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+
+                <div class="flex justify-between">
+                    <span class="font-bold text-white">Price</span>
+                    <span class="text-gray-300">Rp {{ game.harga }}</span>
+                </div>
+
+                <div class="border-t-4 border-red-500 my-4"></div>
+
+            </div>
+    
+         
+            <!-- Game Description -->
+            <p class="text-gray-300 mt-4 text-justify italic">{{ game.description }}</p>
+
+            <div class="flex justify-center mt-12">
+                <a href="/display/{{ game.pk }}" class="edit-button">
+                    Back to Details Game
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Right Section for Reviews -->
+        <div class="col-span-2">
+            <div class="grid grid-cols-1 gap-4">
+                <!-- User's Review Section -->
+                <div class="bg-gray-900 shadow-lg rounded-lg p-6 border border-gray-900">
+                    {% if not review_user %}
+                        <button id="openReviewModal" class="w-full bg-rose-700 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded-lg">
+                            Add Review
+                        </button>
+                    {% else %}
+                        <h3 class="text-xl text-white font-semibold mb-4">Your Review</h3>
+                        <div class="bg-slate-300 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">{{ review_user.title }}</h3>
+                            <p class="text-gray-700">{{ username }} - {{ review_user.date }}</p>
+                            <p class="mt-2">{{ review_user.content }}</p>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex space-x-1">
+                                    {% for i in "12345" %}
+                                        <span class="text-2xl {% if forloop.counter <= review_user.score %}text-yellow-400{% else %}text-gray-300{% endif %}">★</span>
+                                    {% endfor %}
+                                </div>
+                                <button onclick="removeReview({{ review_user.id }})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Other Users' Reviews Section -->
+                <div class="bg-gray-900 shadow-lg rounded-lg p-6">
+                    <h3 class="text-xl text-white font-semibold mb-4">Other Reviews</h3>
+                    <div id="review_cards" class="space-y-4 max-h-96 overflow-y-auto p-4 rounded-lg shadow-sm">
+                        <!-- Reviews will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Add Review</h3>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <form id="reviewForm" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700">Review Title</label>
+                <input type="text" id="title" name="title" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2" required>
+            </div>
+            
+            <div>
+                <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
+                <textarea id="content" name="content" rows="3" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2" required></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Score</label>
+                <div class="flex space-x-1" id="starRating">
+                    {% for i in "12345" %}
+                        <button type="button" class="text-2xl text-gray-300 hover:text-yellow-400 focus:outline-none star-btn" data-value="{{ forloop.counter }}">★</button>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="score" id="score" value="1">
+            </div>
+            
+            <div class="flex justify-end space-x-2 mt-4">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-md hover:bg-gray-100">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 bg-rose-700 text-white rounded-md hover:bg-rose-600">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Modal functions
+    function openModal() {
+        document.getElementById('reviewModal').classList.remove('hidden');
+        document.getElementById('reviewModal').classList.add('flex');
+    }
+
+    function closeModal() {
+        document.getElementById('reviewModal').classList.add('hidden');
+        document.getElementById('reviewModal').classList.remove('flex');
+        resetForm();
+    }
+
+    function resetForm() {
+        document.getElementById('reviewForm').reset();
+        document.getElementById('score').value = "1";
+        updateStars(1);
+    }
+
+    // Star rating system
+    document.querySelectorAll('.star-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const value = this.dataset.value;
+            document.getElementById('score').value = value;
+            updateStars(value);
+        });
+    });
+
+    function updateStars(value) {
+        document.querySelectorAll('.star-btn').forEach((star, index) => {
+            star.classList.remove('text-yellow-400', 'text-gray-300');
+            star.classList.add(index < value ? 'text-yellow-400' : 'text-gray-300');
+        });
+    }
+
+    // Open modal button
+    document.getElementById('openReviewModal')?.addEventListener('click', openModal);
+
+    // Form submission
+    document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        try {
+            const response = await fetch("{% url 'review:create_review_ajax' game_id %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            if (response.ok) {
+                closeModal();
+                location.reload(); // Refresh the page to update both sections
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    // Get reviews function
+    async function getReviews() {
+        try {
+            const response = await fetch("{% url 'review:get_review_json' game_id %}");
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
+            return [];
+        }
+    }
+
+    // Async refresh reviews
+    async function refreshReviews() {
+        const reviews = await getReviews();
+        const reviewContainer = document.getElementById("review_cards");
+        
+        if (reviews.length === 0) {
+            reviewContainer.innerHTML = `
+                <div class="text-center text-gray-500">
+                    <img src="{% static 'image/empty_review.png' %}" alt="No reviews" class="mx-auto w-32 h-32">
+                    <p class="mt-4">No reviews yet. Be the first to review!</p>
+                </div>
+            `;
+            return;
+        }
+
+        const currentUser = "{{ request.user.username }}";
+        const otherReviews = reviews.filter(review => review.username !== currentUser);
+
+        reviewContainer.innerHTML = otherReviews.map(review => `
+            <div class="p-4 bg-slate-200 rounded-lg shadow border border-gray-300">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-bold">${review.title}</h4>
+                        <p class="text-sm text-gray-600">${review.username} - ${review.date}</p>
+                        <div class="text-xs text-gray-500 mt-1">
+                            ${review.vote_score > 0 ? `+${review.vote_score}` : review.vote_score} votes
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button 
+                            onclick="voteReview(${review.id}, 'upvote')" 
+                            class="vote-btn group relative ${review.user_upvoted ? 'text-green-600' : 'text-gray-400'} hover:text-green-600 transition-colors"
+                            title="${review.user_upvoted ? 'Click again to cancel upvote' : 'Upvote'}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                            </svg>
+                            <!-- Tooltip -->
+                            <span class="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap">
+                                ${review.user_upvoted ? 'Cancel upvote' : 'Upvote'}
+                            </span>
+                        </button>
+                        <span class="vote-score text-sm font-semibold ${review.vote_score > 0 ? 'text-green-600' : review.vote_score < 0 ? 'text-red-600' : 'text-gray-500'}">
+                            ${review.vote_score > 0 ? `+${review.vote_score}` : review.vote_score}
+                        </span>
+                        <button 
+                            onclick="voteReview(${review.id}, 'downvote')"
+                            class="vote-btn group relative ${review.user_downvoted ? 'text-red-600' : 'text-gray-400'} hover:text-red-600 transition-colors"
+                            title="${review.user_downvoted ? 'Click again to cancel downvote' : 'Downvote'}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                            <!-- Tooltip -->
+                            <span class="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap">
+                                ${review.user_downvoted ? 'Cancel downvote' : 'Downvote'}
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <p class="mt-2">${review.content}</p>
+                
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex space-x-1 mt-2">
+                        ${[...Array(5)].map((_, i) => `
+                            <span class="text-2xl ${i < review.score ? 'text-yellow-400' : 'text-gray-300'}">★</span>
+                        `).join('')}
+                    </div>
+                    
+                    {% if user.is_staff %}
+                        <button onclick="removeReview(${review.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                            Delete
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function voteReview(reviewId, voteType) {
+        if (!{{ request.user.is_authenticated|yesno:"true,false" }}) {
+            alert('Please log in to vote');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('review_id', reviewId);
+        formData.append('vote_type', voteType);
+
+        try {
+            const response = await fetch("{% url 'review:vote_review' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.status === 'success') {
+                    refreshReviews(); // Refresh to update the UI with sorted reviews
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Delete review
+    async function removeReview(reviewId) {
+
+        const formData = new FormData();
+        formData.append('id', reviewId);
+
+        try {
+            const response = await fetch("{% url 'review:remove_ajax' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            if (response.ok) {
+                location.reload(); // Refresh the page
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Initial load
+    refreshReviews();
+</script>
+
+{% endblock content %}
