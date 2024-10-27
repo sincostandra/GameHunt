@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <!-- Title -->
 <h1 class="mt-20 mb-6 text-4xl font-bold text-center">GameHunt</h1>
@@ -336,7 +337,7 @@
         <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-3 flex items-center space-x-4 my-4">
           <div class="flex-1 space-y-2">
             <div class="flex justify-between items-center">
-              <a href="/search/edit-game/${item.pk}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
+              <a href="/display/${item.pk}" class="text-lg font-semibold text-gray-900 game-title-link hover:text-red-500">
                 ${item.fields.name}
               </a>
               {% if role == 'admin' %}
@@ -379,7 +380,8 @@
             <div class="circle-text">${item.fields.ratings}</div>
           </div>
         </div>
-      </div>`;
+      </div>
+      `;
     });
   }
 
