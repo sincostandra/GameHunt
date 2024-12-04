@@ -13,7 +13,7 @@ from review.forms import ReviewForm
 from search.models import Game
 # Create your views heresss.
 
-# GET (Read)
+# GET (Reads)
 @login_required(login_url='review:login')
 def show_reviews(request, game_id):
     game = Game.objects.get(pk=game_id)
