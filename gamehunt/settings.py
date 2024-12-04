@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-!tjgo5u1-1s=d2_*ikvi*l0p9ol+=z^48qqvuwyw9_+l@_q_cc
 PRODUCTION = os.getenv("PRODUCTION", False)
 DEBUG = not PRODUCTION
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", '10.0.2.2', "utandra-nur-gamehunt.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", '10.0.2.2', "utandra-nur-gamehunt.pbp.cs.ui.ac.id", "utandra-nur-gamehunts.pbp.cs.ui.ac.id"]
 
 # Application definition
 
