@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from review.forms import ReviewForm
 from search.models import Game
-# Create your views heres.
+# Create your views heresss.
 
 # GET (Read)
 @login_required(login_url='review:login')
