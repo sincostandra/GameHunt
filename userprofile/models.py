@@ -13,4 +13,12 @@ class UserProfile(models.Model):
     email = models.EmailField(blank=True)
 
     def __str__(self):
-        return self.user.username
+        return f"== UserProfile ==\n" \
+               f"description : {self.description}\n" \
+               f"first_name : {self.first_name}\n" \
+               f"last_name : {self.last_name}\n" \
+               f"date_of_birth : {self.date_of_birth}\n" \
+               f"gender : {self.gender}\n" \
+               f"location : {self.location}\n" \
+               f"phone_number : {self.phone_number}\n" \
+               f"email : {self.email}"
