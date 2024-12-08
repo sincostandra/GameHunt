@@ -12,3 +12,5 @@ class News(models.Model):
     post_date = models.DateTimeField(auto_now_add=True)
     # Automatically updates the field on each save
     update_date = models.DateTimeField(auto_now=True)
+
+    

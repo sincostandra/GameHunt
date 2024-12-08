@@ -4,6 +4,9 @@ from .models import News
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.http import JsonResponse
 
 # Create your views here.
 @login_required
@@ -95,3 +98,23 @@ def show_xml_by_id(request, id):
 def show_json_by_id(request, id):
     data = News.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@csrf_exempt
+def create_news_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_entry = News.objects.create(
+            user=request.user,
+            title=data["title"],
+            author=data["author"],
+            article=data["article"],
+            post_date=data["post_date"],
+            update_date=data["update_date"],
+        )
+
+        new_entry.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
