@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+import json
+from django.http import JsonResponse
 
 @login_required
 def show_search(request):
@@ -108,3 +110,123 @@ def add_game_entry_ajax(request):
     new_game.save()
 
     return HttpResponse(b"CREATED", status=201)
+
+
+@csrf_exempt
+def create_game_flutter(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON body from request
+            data = json.loads(request.body)
+
+            # Buat instance Game baru
+            new_game = Game.objects.create(
+                name=data["name"],
+                year=int(data.get("year", 0)) if data.get("year") else None,
+                description=data["description"],
+                developer=data["developer"],
+                genre=data["genre"],
+                ratings=float(data["ratings"]),
+                harga=int(data["harga"]),
+                toko1=data["toko1"],
+                alamat1=data["alamat1"],
+                toko2=data.get("toko2", ""),  # Optional
+                alamat2=data.get("alamat2", ""),  # Optional
+                toko3=data.get("toko3", ""),  # Optional
+                alamat3=data.get("alamat3", ""),  # Optional
+            )
+
+            # Simpan instance Game
+            new_game.save()
+
+            return JsonResponse({"status": "success", "id": str(new_game.id)}, status=200)
+        except KeyError as e:
+            return JsonResponse({"status": "error", "message": f"Missing field: {str(e)}"}, status=400)
+        except ValueError as e:
+            return JsonResponse({"status": "error", "message": f"Invalid value: {str(e)}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+    
+
+@csrf_exempt
+def edit_game_flutter(request, game_id):
+    # game_id adalah UUID dalam bentuk string
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            # game_uuid = UUID(game_id)
+            game = Game.objects.get(id=game_id)
+
+            if "name" in data: game.name = data["name"]
+            if "year" in data:
+                game.year = int(data["year"]) if data["year"] else None
+            if "description" in data: game.description = data["description"]
+            if "developer" in data: game.developer = data["developer"]
+            if "genre" in data: game.genre = data["genre"]
+            if "ratings" in data: game.ratings = float(data["ratings"])
+            if "harga" in data: game.harga = int(data["harga"])
+            if "toko1" in data: game.toko1 = data["toko1"]
+            if "alamat1" in data: game.alamat1 = data["alamat1"]
+            if "toko2" in data: game.toko2 = data["toko2"]
+            if "alamat2" in data: game.alamat2 = data["alamat2"]
+            if "toko3" in data: game.toko3 = data["toko3"]
+            if "alamat3" in data: game.alamat3 = data["alamat3"]
+
+            game.save()
+
+            return JsonResponse({"status": "success"}, status=200)
+        except Game.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Game not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def delete_game_flutter(request, game_id):
+    if request.method == 'DELETE':
+        try:
+            # game_uuid = UUID(game_id)
+            game = Game.objects.get(pk=game_id)
+            game.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Game.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Game not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+def game_list_json(request):
+    games = Game.objects.all()
+    data = []
+    for g in games:
+        data.append({
+            'id': str(g.id),
+            'fields': {
+                'name': g.name,
+                'year': g.year,
+                'description': g.description,
+                'developer': g.developer,
+                'genre': g.genre,
+                'ratings': g.ratings,
+                'harga': g.harga,
+                'toko1': g.toko1,
+                'alamat1': g.alamat1,
+                'toko2': g.toko2,
+                'alamat2': g.alamat2,
+                'toko3': g.toko3,
+                'alamat3': g.alamat3,
+            }
+        })
+    return JsonResponse(data, safe=False)
+
+
+@login_required
+def get_user_role(request):
+    role = "admin" if request.user.is_superuser else "user"
+    return JsonResponse({"role": role})
