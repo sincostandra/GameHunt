@@ -21,28 +21,28 @@ Jadi, tunggu apa lagi? Jelajahi dunia game PS4 dengan mudah dan cepat bersama Ga
 
 ## Modules
 
-### **Review**
+### **Review** (Utandra Nur Ahmad Jais)
 - Pengguna memiliki kemampuan untuk menambahkan ulasan terkait kaset game dari berbagai toko terdekat. Setiap review bisa memberikan informasi yang bermanfaat bagi pengguna lain.
 - Ulasan dapat diurutkan berdasarkan jumlah bintang, sehingga memudahkan pengguna untuk melihat review dengan rating tertinggi.
 - Admin memiliki kendali penuh atas review, termasuk kemampuan untuk menambah dan menghapus review sesuai kebutuhan.
 
-### **User Authentication**
+### **User Authentication** (Oscar Ryanda Putra)
 - Pengguna dapat membuat akun dan login untuk mengakses fitur-fitur eksklusif GameHunt.
 - Setelah mendaftar, pengguna dapat membuat dan mengedit profil mereka, yang berfungsi sebagai pusat informasi pribadi dan aktivitas pengguna di platform.
 
-### **Pencarian Game**
+### **Pencarian Game** (Vincent Davis Leonard Tjoeng)
 - Pengguna dapat dengan mudah mencari kaset game berdasarkan nama game yang diinginkan.
 - Admin memiliki hak untuk menambahkan game baru ke dalam database, memastikan ketersediaan game PS4 terbaru dan klasik langka selalu diperbarui.
 
-### **Display Game**
+### **Display Game** (Priscilla Natanael Surjanto)
 - Pengguna dapat melihat daftar toko yang menjual game yang mereka cari, lengkap dengan informasi terkait lokasi dan harga.
 - Game yang diminati pengguna dapat ditambahkan ke wishlist untuk disimpan dan dikelola.
 
-### **Wishlist**
+### **Wishlist** (Rahma Dwi Maghfira)
 - Pengguna dapat menambahkan game favorit mereka ke dalam wishlist untuk memudahkan pelacakan dan akses cepat di masa mendatang.
 - Wishlist juga memungkinkan pengguna untuk menghapus game yang tidak lagi mereka inginkan dari daftar.
 
-### **Game News**
+### **Game News** (Aliefa Alsyafiandra Setiawati Mahdi)
 - Admin memiliki kemampuan untuk mengelola berita terbaru mengenai dunia game PS4, termasuk menambahkan, mengedit, dan menghapus berita.
 - Pengguna dapat dengan mudah mengakses berbagai informasi terbaru, promosi, dan diskon menarik di dunia game melalui fitur berita ini.
 
