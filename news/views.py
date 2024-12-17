@@ -31,7 +31,7 @@ def show_news(request, id):
         'title' : news.title,
         'author' : news.author,
         'article' : news.article,
-        'post_date' : news.post_date,
+        # 'post_date' : news.post_date,
         'update_date' : news.update_date,
         'pk' : news.pk,
         'news_entries' : News.objects.all()
@@ -104,17 +104,57 @@ def create_news_flutter(request):
     if request.method == 'POST':
 
         data = json.loads(request.body)
-        new_entry = News.objects.create(
-            user=request.user,
+        new_mood = News.objects.create(
+            # user=request.user,
             title=data["title"],
             author=data["author"],
             article=data["article"],
-            post_date=data["post_date"],
             update_date=data["update_date"],
         )
 
-        new_entry.save()
+        new_mood.save()
 
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
+    
+
+@csrf_exempt
+def edit_news_flutter(request, id):
+    # news_id adalah UUID dalam bentuk string
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            # news_uuid = UUID(news_id)
+            news = News.objects.get(id=id)
+
+            if "title" in data: news.title = data["title"]
+            if "article" in data: news.article = data["article"]
+            if "author" in data: news.author = data["author"]
+            if "update_date" in data: news.update_date = data["update_date"]
+
+            news.save()
+
+            return JsonResponse({"status": "success"}, status=200)
+        except News.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "News not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def delete_news_flutter(request, id):
+    if request.method == 'DELETE':
+        try:
+            # news_uuid = UUID(news_id)
+            news = News.objects.get(pk=id)
+            news.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except News.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "News not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)

@@ -9,7 +9,7 @@ class News(models.Model):
     article = models.TextField()
     author = models.CharField(max_length=255)
     # Automatically sets the creation date
-    post_date = models.DateTimeField(auto_now_add=True)
+    # post_date = models.DateTimeField(auto_now_add=True)
     # Automatically updates the field on each save
     update_date = models.DateTimeField(auto_now=True)
 
