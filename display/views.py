@@ -4,13 +4,14 @@ from display.models import Comment
 from display.forms import CommentForm
 from search.models import Game
 from django.shortcuts import render,redirect,reverse
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.contrib import messages
+import json
 
 # Create your views here.
 def game_list(request):
@@ -74,3 +75,36 @@ def delete_comment(request, id):
     comment.delete()
     # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('display:game_detail', args=[comment.game.id]))
+
+@csrf_exempt
+def create_comment_flutter(request):   
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_comment = Comment.objects.create(
+            name=request.user.username,
+            body=data['body'],
+            game=Game.objects.get(pk=data['game']),
+            created=timezone.now()
+        )
+
+        new_comment.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+@csrf_exempt
+def delete_comment_flutter(request, id):
+    if request.method == 'DELETE':
+        try:
+            # news_uuid = UUID(news_id)
+            comment = Comment.objects.get(pk=id)
+            comment.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Comment.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "News not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
