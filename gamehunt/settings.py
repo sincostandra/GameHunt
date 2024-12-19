@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'authentication',
     'userprofile',
     'wishlist',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
