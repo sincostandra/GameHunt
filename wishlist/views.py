@@ -65,6 +65,10 @@ def add_wishlist_ajax(request):
         try:
             data = json.loads(request.body)
             game_wishlisted = Game.objects.get(pk=data['game_id'])
+
+            if Wishlist.objects.filter(game=game_wishlisted, user=request.user).exists():
+                return JsonResponse({"status": "info", "message": "Game already in wishlist"}, status=200)
+
             new_game = Wishlist.objects.create(
                 game=game_wishlisted,
                 user=request.user  # Ensure the user is set
