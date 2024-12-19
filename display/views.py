@@ -82,9 +82,9 @@ def create_comment_flutter(request):
 
         data = json.loads(request.body)
         new_comment = Comment.objects.create(
-            user=request.user,
+            name=request.user.username,
             body=data['body'],
-            game=Game.objects.get(pk=data['game_id']),
+            game=Game.objects.get(pk=data['game']),
             created=timezone.now()
         )
 
@@ -93,3 +93,18 @@ def create_comment_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
+
+@csrf_exempt
+def delete_comment_flutter(request, id):
+    if request.method == 'DELETE':
+        try:
+            # news_uuid = UUID(news_id)
+            comment = Comment.objects.get(pk=id)
+            comment.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Comment.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "News not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
