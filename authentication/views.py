@@ -20,7 +20,7 @@ import json
 from django.contrib.auth import logout as auth_logout
 
 # Create your views here.
-@csrf_exempt
+@csrf_exempt # flag bahaya
 def register_user(request):
     form = UserCreationForm()
 
