@@ -11,9 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from review.forms import ReviewForm
 from search.models import Game
-# Create your views here.
+# Create your views heresss.
 
-# GET (Read)
+# GET (Reads)
 @login_required(login_url='review:login')
 def show_reviews(request, game_id):
     game = Game.objects.get(pk=game_id)
@@ -68,12 +68,12 @@ def create_review_ajax(request, game_id):
 
 # GET Json Data (all review of user)
 def get_review_json(request, game_id):
-    reviews = Review.objects.filter(game_id=game_id)\
+    reviews = Review.objects.filter(game_id=game_id).exclude(user=request.user)\
         .annotate(
             vote_count=Count('upvotes') - Count('downvotes')
         )\
-        .order_by('-vote_count', '-date')  # Sort by votes first, then by date
-    
+        .order_by('-vote_count', '-date')
+
     return JsonResponse([{
         'id': review.id,
         'username': review.user.username,
@@ -82,23 +82,29 @@ def get_review_json(request, game_id):
         'score': review.score,
         'date': str(review.date)[:10] + " " + str(review.date)[11:20],
         'vote_score': review.vote_score,
-        'user_upvoted': request.user in review.upvotes.all() if request.user.is_authenticated else False,
-        'user_downvoted': request.user in review.downvotes.all() if request.user.is_authenticated else False
+        'user_upvoted': request.user in review.upvotes.all(),
+        'user_downvoted': request.user in review.downvotes.all()
     } for review in reviews], safe=False)
 
 
 # GET Json Data (specific one user)
+# Update get_user_review in views.py to include all necessary fields
+
 @login_required
 def get_user_review(request, game_id):
     game = Game.objects.get(pk=game_id)
     try:
         review = Review.objects.get(game=game, user=request.user)
         return JsonResponse({
+            'id': review.id,
+            'username': request.user.username,
             'title': review.title,
             'content': review.content,
             'score': review.score,
-            'id': review.id,
-            'username': request.user.username
+            'date': str(review.date)[:10] + " " + str(review.date)[11:20],
+            'vote_score': review.vote_score,
+            'user_upvoted': request.user in review.upvotes.all(),
+            'user_downvoted': request.user in review.downvotes.all()
         })
     except Review.DoesNotExist:
         return JsonResponse({}, status=404)
