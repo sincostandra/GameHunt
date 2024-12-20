@@ -20,6 +20,7 @@ import json
 from django.contrib.auth import logout as auth_logout
 
 # Create your views here.
+@csrf_exempt
 def register_user(request):
     form = UserCreationForm()
 
@@ -32,6 +33,7 @@ def register_user(request):
     context = {'form':form}
     return render(request, 'register.html', context)
 
+@csrf_exempt
 def login_user(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
