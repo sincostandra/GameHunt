@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import show_news, edit_news, create_news, home_news, delete_news
 from .views import show_xml, show_json, show_xml_by_id, show_json_by_id
+from .views import create_news_flutter, edit_news_flutter, delete_news_flutter
 
 app_name = 'news'
 
@@ -14,4 +15,7 @@ urlpatterns = [
     path('json/', show_json, name='show_json'),
     path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
     path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
+    path('create-flutter/', create_news_flutter, name='create_news_flutter'),
+    path('edit-flutter/<uuid:id>/', edit_news_flutter, name='edit_news_flutter'),
+    path('delete-flutter/<uuid:id>/', delete_news_flutter, name='delete_news_flutter'),
 ]

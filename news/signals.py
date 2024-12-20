@@ -7,7 +7,7 @@ from search.models import DataImportStatus
 @receiver(post_migrate)
 def import_data_after_migration(sender, **kwargs):
     # Pastikan tabel 'search_dataimportstatus' sudah ada sebelum mengaksesnya
-    if 'search_dataimportstatus' in connection.introspection.table_names():
+    if 'news_dataimportstatus' in connection.introspection.table_names():
         import_status, created = DataImportStatus.objects.get_or_create(id=1)
 
         # Cek apakah ini adalah pertama kali atau belum pernah diimport
@@ -18,4 +18,4 @@ def import_data_after_migration(sender, **kwargs):
             import_status.save()
             print("Data import completed successfully!")
     else:
-        print("Table 'search_dataimportstatus' not found yet. Skipping data import.")
+        print("Table 'news_dataimportstatus' not found yet. Skipping data import.")
