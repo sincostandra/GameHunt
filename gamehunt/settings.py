@@ -154,5 +154,5 @@ CSRF_TRUSTED_ORIGINS = [
     "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/",
     "http://utandra-nur-gamehunts.pbp.cs.ui.ac.id/",
     "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id/authentication/login?next=/",
-    "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id"
+    "https://utandra-nur-gamehunts.pbp.cs.ui.ac.id" # yg bener
 ]
