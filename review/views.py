@@ -159,3 +159,22 @@ def vote_review(request):
             return JsonResponse({'status': 'error'}, status=404)
 
     return JsonResponse({'status': 'error'}, status=400)
+
+@csrf_exempt
+def delete_review_flutter(request, id):
+    if request.method == 'DELETE':
+        try:
+            data = Review.objects.get(pk=id)
+            data.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Review.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Review not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+@login_required
+def get_user_role(request):
+    role = "admin" if request.user.is_superuser else "user"
+    return JsonResponse({"username": request.user.username ,"role": role})
