@@ -161,6 +161,51 @@ def vote_review(request):
     return JsonResponse({'status': 'error'}, status=400)
 
 @csrf_exempt
+def vote_review_flutter(request):
+    if request.method == 'POST':
+        review_id = request.POST.get('review_id')
+        vote_type = request.POST.get('vote_type')
+
+        if not review_id or not vote_type:
+            return JsonResponse({'status': 'error', 'message': 'Missing parameters.'}, status=400)
+
+        try:
+            review = Review.objects.get(pk=review_id)
+            user = request.user
+
+            # Check if user is trying to cancel their vote
+            if vote_type == 'upvote':
+                if user in review.upvotes.all():
+                    review.upvotes.remove(user)  # Cancel upvote
+                else:
+                    review.upvotes.add(user)
+                    review.downvotes.remove(user)  # Remove downvote if exists
+            elif vote_type == 'downvote':
+                if user in review.downvotes.all():
+                    review.downvotes.remove(user)  # Cancel downvote
+                else:
+                    review.downvotes.add(user)
+                    review.upvotes.remove(user)  # Remove upvote if exists
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Invalid vote type.'}, status=400)
+
+            # Calculate vote_score (e.g., upvotes - downvotes)
+            vote_score = review.upvotes.count() - review.downvotes.count()
+
+            return JsonResponse({
+                'status': 'success',
+                'vote_score': vote_score,
+                'user_upvoted': user in review.upvotes.all(),
+                'user_downvoted': user in review.downvotes.all()
+            })
+        except Review.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Review not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
 def delete_review_flutter(request, id):
     if request.method == 'DELETE':
         try:
