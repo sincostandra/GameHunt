@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "gamehunt/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "gamehunt/wsgi.py"
+      }
+    ]
+  }
